@@ -258,7 +258,8 @@ const GAME_URL = "https://rockchalknam.github.io/heronrush/";
       in a "templates" folder next to this page. List the ones that are ready. */
 const TEMPLATE_FOLDER = "templates/";
 const TEMPLATES_READY = [
-  // "copy-cat.txt", "level-janitor.txt", "crash-detective.txt", "portal-pass.txt", "on-the-beat.txt",
+  "copy-cat.txt", "level-janitor.txt", "crash-detective.txt", "portal-pass.txt",
+  // "on-the-beat.txt",
 ];
 const SONGS = [
   // { id: "12345", name: "Song name" },
@@ -365,11 +366,11 @@ const EX = [
   readFirst:"Object Hunt",
   intro:"Rebuild this section exactly. Count the squares! Every object should be in the same spot.",
   template:"copy-cat.txt",
-  templateNote:"The template has faded guide shapes showing where each object goes. Place the real objects right on top of them. Don't move the guides.",
+  templateNote:"The template has Mr. Nam's section already built at the start of the level. Your job: build an exact copy right after it.",
   diagram:COPYCAT,
   steps:[
-   "Import the template (or start a new level if it's not ready yet).",
-   "Build the section above. Use the guides and the grid to count spaces.",
+   "Import the template. Play it once to see how the section works.",
+   "Leave a 3-square gap after the last spike, then build your copy. Use the grid to count spaces.",
    "Click the yellow <b>▶</b> at the top to play-test.",
    "The yellow pad should launch you onto the floating platform, over the spikes. If you don't make it, nudge the pad one square left or right. That's how real builders tune a jump.",
    "Save.",
@@ -379,17 +380,17 @@ const EX = [
 
 { id:"RB2", day:"day1", name:"Level Janitor", req:false, size:"Short", pts:100,
   readFirst:"Copy Cat",
-  intro:"Oh no! Someone wrecked this level. Objects are flipped, giant, floating in the way, and stacked on top of each other. Clean it up.",
+  intro:"Oh no! Someone wrecked the Copy Cat section. There's a wall in the way, a block stuck over a spike, a spike sitting on the landing platform, and junk floating in the air. Clean it up.",
   template:"level-janitor.txt",
   templateNote:"Download and import the wrecked level. Its name ends in \"Import\" in your level list.",
   steps:[
-   "Delete the junk objects that are blocking the path.",
-   "Rotate and resize the rest back to normal.",
+   "Play it once. Watch where the red X shows up each time you crash.",
+   "Delete the junk objects that make the level impossible. Keep the ones that belong (compare with the Copy Cat picture).",
    "Play-test until you can beat it start to finish.",
    "Save.",
   ],
   submit:"a before screenshot, an after screenshot, and your exported level file (tick it, then Export Level)",
-  hint:"Select an object and look at its size and rotation. Normal is size 1 and rotation 0." },
+  hint:"Use Edit mode and the select tool [V] to click one object at a time, then hit Delete. Undo is your friend if you delete the wrong one." },
 
 { id:"RB1", day:"day1", name:"Name Sign", req:false, size:"Tiny", pts:50,
   intro:"Spell your first name (or initials) using blocks, spikes, or decorations. Make it readable from the editor view.",
@@ -414,7 +415,7 @@ const EX = [
   readFirst:"Jump Lab",
   intro:"When you crash in a play-test, Challenge Rush leaves clues: a red X where you died and a red trail of your path. Pros use this to fix levels fast.",
   template:"crash-detective.txt",
-  templateNote:"Optional: the template has 3 sneaky crash spots already built in. Find and fix all 3 for this exercise.",
+  templateNote:"Optional: the template has 3 crash spots built in: a wall that's too tall, a spike under a low ceiling, and a spike row that's too long. Find and fix all 3.",
   steps:[
    "Use the template, or build a short section that you <b>will</b> crash on. Example: a block too high to jump.",
    "Play-test until you crash. Take a <b>screenshot of the red X and trail</b>.",
@@ -473,8 +474,6 @@ const EX = [
 { id:"D2", day:"day3", name:"On the Beat", req:true, size:"Short", pts:100,
   readFirst:"Drop the Beat",
   intro:"The best levels feel like you're playing the song. Make the jumps match the music.",
-  template:"on-the-beat.txt",
-  templateNote:"Optional: the template has an approved song and beat lines already set up, so you can jump straight to building.",
   steps:[
    "Using your song and pink lines, place obstacles so <b>8 jumps in a row land on the beat</b>.",
    "Play-test <b>with sound on</b> (headphones!).",
