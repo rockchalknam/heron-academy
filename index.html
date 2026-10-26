@@ -41,7 +41,6 @@ h2{font-size:26px;margin-bottom:12px}
 .rules li{margin:6px 0}
 .rules b{color:var(--yellow)}
 .big-rule{font:700 20px "Chakra Petch",sans-serif;color:var(--red);margin:0 0 8px}
-/* progress */
 .prog{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .bar{flex:1;min-width:200px;height:14px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
 .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width .4s}
@@ -50,7 +49,6 @@ h2{font-size:26px;margin-bottom:12px}
 .ranks{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .rk{padding:6px 10px;border-radius:8px;border:1px dashed var(--line);color:var(--muted);font-size:14px}
 .rk.on{border-style:solid;border-color:var(--yellow);color:var(--yellow)}
-/* day headers */
 .day{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin:26px 0 10px}
 .day h3{font-size:22px}
 .day .sub{color:var(--muted);font-size:14px}
@@ -60,7 +58,7 @@ h2{font-size:26px;margin-bottom:12px}
 .p-tiny{color:var(--green);border-color:var(--green)}
 .p-short{color:var(--cyan);border-color:var(--cyan)}
 .p-pts{color:var(--magenta);border-color:var(--magenta)}
-/* exercise cards (Discord-style) */
+.p-clip{color:var(--cyan);border-color:var(--cyan)}
 .ex{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--cyan);border-radius:var(--radius);overflow:hidden}
 .ex.rookie{border-left-color:var(--green)} .ex.builder{border-left-color:var(--cyan)} .ex.designer{border-left-color:var(--magenta)} .ex.boss{border-left-color:var(--yellow)}
 .ex.done{opacity:.72}
@@ -84,6 +82,9 @@ h2{font-size:26px;margin-bottom:12px}
 .hint{margin-top:10px}
 .hint summary{cursor:pointer;color:var(--muted);font-size:14px;padding:0}
 .hint p{margin:6px 0 0;font-size:14px;color:var(--muted)}
+.clip{margin:10px 0 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0618}
+.clip img{display:block;width:100%;height:auto}
+.clip figcaption{padding:7px 10px;font-size:13px;color:var(--muted);background:var(--panel2)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .riddle{background:var(--panel2);border-radius:8px;padding:8px 10px;margin:6px 0;font-style:italic}
 .diagram{background:#0b0618;border:1px solid var(--line);border-radius:10px;padding:8px;margin:8px 0;overflow-x:auto}
@@ -94,7 +95,6 @@ h2{font-size:26px;margin-bottom:12px}
 .tpl{background:var(--panel2);border:1px dashed var(--yellow);border-radius:10px;padding:12px}
 table.lab{border-collapse:collapse;margin-top:6px;font-size:14px}
 table.lab td,table.lab th{border:1px solid var(--line);padding:5px 10px;text-align:left}
-/* challenges */
 .ch{border-radius:var(--radius);padding:16px;border:1px solid var(--line);background:var(--panel)}
 .ch h4{margin:0 0 6px;font:700 17px "Chakra Petch"}
 .ch.easy h4{color:var(--green)} .ch.med h4{color:var(--cyan)} .ch.hard h4{color:var(--magenta)}
@@ -135,13 +135,13 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 
 <main class="wrap">
 
-<!-- START HERE -->
 <section id="start">
   <div class="grid g2">
     <div class="panel">
       <p class="big-rule">WE NEVER LOG IN.</p>
       <ul class="rules">
         <li>If the game asks you to log in or sync, click <b>NO</b>.</li>
+        <li>Always open the game with the <b>Open Heron Rush</b> button. Opened any other way, your levels won't be there.</li>
         <li>Use the <b>same laptop every class</b>. Your levels only save on that laptop.</li>
         <li>Songs: only use songs on Mr. Nam's <b>approved list</b>. Never click Upload Song.</li>
         <li><b>Rank</b> and <b>Discord</b> are off-limits during class.</li>
@@ -155,7 +155,7 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
       <h3 style="font-size:20px;margin-bottom:8px">How the Academy works</h3>
       <p style="margin:0 0 8px">Each exercise is a short mission. Do it in the editor, take proof, and turn it in. Each one earns points.</p>
       <p style="margin:0 0 8px"><span class="pill p-req">Required</span>You need these to rank up.<br><span class="pill p-opt">Bonus</span>Optional, but worth <b>2x points</b>.</p>
-      <p style="margin:0"><span class="pill p-tiny">Tiny</span>under 10 min &nbsp; <span class="pill p-short">Short</span>10 to 20 min</p>
+      <p style="margin:0"><span class="pill p-tiny">Tiny</span>under 10 min &nbsp; <span class="pill p-short">Short</span>10 to 20 min &nbsp; <span class="pill p-clip">▶ Clip</span>video in the hint</p>
       <p style="margin:10px 0 0">Finish every Required exercise to earn your <b style="color:var(--yellow)">Editor License</b>. That's your ticket to start your first real build.</p>
     </div>
   </div>
@@ -173,7 +173,6 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 
 <section id="exercises" style="padding-top:4px"></section>
 
-<!-- CHALLENGES -->
 <section id="challenges">
   <h2>Daily Challenges</h2>
   <p style="margin:0 0 14px;color:var(--muted)">New challenges every school day. Finish an exercise early? Grab one. Each challenge can be done once per day. Turn it in with the title <b style="color:var(--text)">"Challenge: Easy/Medium/Hard #"</b>. If a rule isn't listed, you can do anything you want.</p>
@@ -181,7 +180,6 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
   <p class="pts" id="chDate" style="margin:10px 0 0;font-size:13px"></p>
 </section>
 
-<!-- IMPORT / EXPORT -->
 <section id="import">
   <h2>Template Levels: Import &amp; Export</h2>
   <div class="grid g2">
@@ -189,7 +187,7 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
       <h3 style="font-size:19px;margin-bottom:8px">Import a template</h3>
       <ol class="how">
         <li>Click <b>Download template</b> on the exercise card. It goes to your <b>Downloads</b> folder.</li>
-        <li>In Challenge Rush, open the <b>Editor</b>.</li>
+        <li>Open the game with <b>Open Heron Rush</b>, then open the <b>Editor</b>.</li>
         <li>Click the <b>Import Level</b> tab at the top.</li>
         <li>Pick the file from Downloads and click Open.</li>
         <li>The level shows up in your list with <b>"Import"</b> at the end of its name. Click the 🛠 tools button to edit it.</li>
@@ -198,7 +196,7 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
     <div class="panel">
       <h3 style="font-size:19px;margin-bottom:8px">Export your level (backup + turn-in)</h3>
       <ol class="how">
-        <li>In the Editor's level list, tick the <b>checkbox</b> next to your level.</li>
+        <li>In the Editor's level list, tick the <b>checkbox</b> next to <b>one</b> level. (Export only works with one level ticked.)</li>
         <li>Click the <b>Export Level</b> tab at the top. A file downloads.</li>
         <li>Rename it to your name and level, like <b>NamN-PortalPass.txt</b>.</li>
         <li>Upload it in the turn-in form, or save it to your Google Drive as a backup.</li>
@@ -208,7 +206,6 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
   </div>
 </section>
 
-<!-- TURN IN -->
 <section id="turnin">
   <h2>How to Turn In</h2>
   <div class="grid g2">
@@ -243,30 +240,22 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 
 <script>
 /* =========================================================
-   MR. NAM: SETTINGS (edit these 3 things)
-   1. FORM_URL: your Google Form's "send" link.
-   2. FORM_ENTRY_EXERCISE: optional. To auto-fill the exercise name,
-      get a pre-filled link from the Form (⋮ > Get pre-filled link),
-      and copy the number after "entry." for the Exercise question.
-   3. SONGS: your approved song IDs from Challenge Rush's library.
+   MR. NAM: SETTINGS
    ========================================================= */
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSegB54pz7rhdrsr_GSi60gcoVFutZPNk1GTCmmfK-Yz2IqhgQ/viewform";
 const FORM_ENTRY_EXERCISE = ""; // e.g. "123456789"
 const GAME_URL = "https://rockchalknam.github.io/heronrush/";
-/* 4. TEMPLATES: export a level from Challenge Rush (tick it, then Export Level),
-      rename the file to match the names below (e.g. copy-cat.txt), and put it
-      in a "templates" folder next to this page. List the ones that are ready. */
 const TEMPLATE_FOLDER = "templates/";
 const TEMPLATES_READY = [
-  // "copy-cat.txt", "level-janitor.txt", "crash-detective.txt", "portal-pass.txt", "on-the-beat.txt",
+  "copy-cat.txt", "level-janitor.txt", "crash-detective.txt", "portal-pass.txt",
+  // "on-the-beat.txt",  (add once it's uploaded to templates/)
 ];
+const GIF_FOLDER = "gifs/";
 const SONGS = [
   // { id: "12345", name: "Song name" },
 ];
 
-/* ---------- Mini level diagrams ----------
-   # block   ^ spike   / slope   y yellow pad   p pink pad
-   O yellow orb   S ship portal   C cube portal   o saw   . empty */
+/* ---------- Mini level diagrams ---------- */
 const COLORS = {"#":"#3ee6ff","^":"#ff5a6e","/":"#3ee6ff","y":"#ffd84a","p":"#ff4fd8","O":"#ffd84a","S":"#ff4fd8","C":"#5dff9b","o":"#ff5a6e"};
 function diagram(rows, label){
   const cs=30, w=rows[0].length*cs, h=rows.length*cs+14;
@@ -309,6 +298,17 @@ const PORTAL = [
   "################",
 ];
 
+/* ---------- Reference clips (GIFs in the gifs folder) ---------- */
+const CLIPS = {
+  place: { file:"HeronAcademy_BasicEditor1.gif", cap:"Place a block, place a spike and rotate it +90 with [R], scale with [E], then press Enter to play-test." },
+  edit:  { file:"HeronAcademy_BasicEditor2.gif", cap:"Select with [V], change Color, use Edit Group for Z Order and Editor Layer, and turn on Show Hitbox in the gear menu." },
+  hunt:  { file:"HeronAcademy_ObjectHunt.gif",   cap:"How to dig through the tabs: Obstacle, Platform → Interactive, Trigger → GameMode, Decoration → Sprite, Trigger → Aesthetic." },
+};
+function clipHTML(key){
+  const c = CLIPS[key]; if(!c) return "";
+  return `<figure class="clip"><img src="${GIF_FOLDER+c.file}" alt="${c.cap}" loading="lazy"><figcaption>${c.cap}</figcaption></figure>`;
+}
+
 /* ---------- Exercises ---------- */
 const DAYS = [
  { id:"day1", rank:"Rookie", title:"Day 1: Rookie", sub:"Get in and out of the editor", cls:"rookie" },
@@ -317,13 +317,12 @@ const DAYS = [
 ];
 
 const EX = [
-/* ===== DAY 1 ===== */
 { id:"R1", day:"day1", name:"Hello, Editor", req:true, size:"Tiny", pts:50,
   readFirst:"Rules in Start Here",
   steps:[
-   "Open Challenge Rush. On the main menu, click <b>Editor</b> (the tools icon at the bottom).",
-   "Click <b>Create New Level</b>.",
-   "Name your level <b>First name + last initial – Rookie</b> (example: <i>Nam N. – Rookie</i>). If you don't see where to name it, check the gear menu or <b>Level Settings</b>.",
+   "Click <b>Open Heron Rush</b>. On the main menu, click <b>Editor</b> (the tools icon at the bottom).",
+   "Click <b>Create New Level</b>. Nothing happens? Tick the box next to any level, click <b>Duplicate Level</b>, and use the copy instead.",
+   "Open your level with the 🛠 tools button. Click the <b>gear</b> and name it <b>First name + last initial – Rookie</b> (example: <i>Nam N. – Rookie</i>).",
    "Place any one block anywhere.",
    "Open the <b>gear</b> menu and click <b>Save and Exit</b>.",
    "Find your level in the level list and open it again. It should still have your block.",
@@ -346,7 +345,8 @@ const EX = [
    "<b>Scroll or zoom</b> the view around your level",
   ],
   submit:"your 9 answers in the form (one line each), plus a screenshot of your editor",
-  hint:"Hover over buttons to see what they do. Try right-click, the scroll wheel, and keyboard shortcuts like Ctrl+Z and Ctrl+D. Ask a neighbor what they found, then test it yourself." },
+  hint:"Hover over buttons to see what they do. Try right-click, the scroll wheel, and keyboard shortcuts like Ctrl+Z and Ctrl+D. Ask a neighbor what they found, then test it yourself. Still stuck after really trying? The clips show some of the moves.",
+  clips:["place","edit"] },
 
 { id:"R3", day:"day1", name:"Object Hunt", req:true, size:"Tiny", pts:50,
   readFirst:"Editor Scout",
@@ -359,7 +359,8 @@ const EX = [
    "I look cool, but you pass right through me. I'm just for looks.",
   ],
   submit:"a screenshot of your five objects in a row",
-  hint:"Check the bottom tabs: Platform → Interactive, Obstacle, Trigger → GameMode, and Decoration." },
+  hint:"Check the bottom tabs: Platform → Interactive, Obstacle, Trigger → GameMode, and Decoration. The clip shows how to dig through the tabs. It doesn't give away the answers.",
+  clips:["hunt"] },
 
 { id:"R4", day:"day1", name:"Copy Cat", req:true, size:"Short", pts:100,
   readFirst:"Object Hunt",
@@ -370,12 +371,13 @@ const EX = [
   steps:[
    "Import the template (or start a new level if it's not ready yet).",
    "Build the section above. Use the guides and the grid to count spaces.",
-   "Click the yellow <b>▶</b> at the top to play-test.",
+   "Click the yellow <b>▶</b> at the top (or press <kbd>Enter</kbd>) to play-test.",
    "The yellow pad should launch you onto the floating platform, over the spikes. If you don't make it, nudge the pad one square left or right. That's how real builders tune a jump.",
    "Save.",
   ],
   submit:"a screenshot of your section in the editor",
-  hint:"Start from the left and work right. If you crash, look for the red X. It shows exactly where you died." },
+  hint:"Start from the left and work right. If you crash, look for the red X. It shows exactly where you died.",
+  clips:["place"] },
 
 { id:"RB2", day:"day1", name:"Level Janitor", req:false, size:"Short", pts:100,
   readFirst:"Copy Cat",
@@ -389,14 +391,14 @@ const EX = [
    "Save.",
   ],
   submit:"a before screenshot, an after screenshot, and your exported level file (tick it, then Export Level)",
-  hint:"Select an object and look at its size and rotation. Normal is size 1 and rotation 0." },
+  hint:"Select an object and look at its size and rotation. Normal is size 1 and rotation 0. The clip shows the [R] rotate and [E] scale tools.",
+  clips:["place"] },
 
 { id:"RB1", day:"day1", name:"Name Sign", req:false, size:"Tiny", pts:50,
   intro:"Spell your first name (or initials) using blocks, spikes, or decorations. Make it readable from the editor view.",
   submit:"a screenshot of your name sign",
   hint:"Slopes make great diagonal letters like A, V, and W." },
 
-/* ===== DAY 2 ===== */
 { id:"B1", day:"day2", name:"Jump Lab", req:true, size:"Short", pts:100,
   readFirst:"Object Hunt",
   intro:"Scientists test things. So do game designers. Find out how high each pad and orb really launches you.",
@@ -456,7 +458,6 @@ const EX = [
   submit:"a screenshot or recording of your flip section",
   hint:"Check the cyan pads and orbs, and the Gravity triggers." },
 
-/* ===== DAY 3 ===== */
 { id:"D1", day:"day3", name:"Drop the Beat", req:true, size:"Tiny", pts:50,
   readFirst:"Rules in Start Here",
   intro:"Music is your level's blueprint. Time to pick a song.",
@@ -493,7 +494,8 @@ const EX = [
    "Play-test to make sure it still plays the same. Screenshot your <b>after</b>.",
   ],
   submit:"your before and after screenshots",
-  hint:"Good decoration points the player's eyes forward. If you can't see a spike, it's too much." },
+  hint:"Good decoration points the player's eyes forward. If you can't see a spike, it's too much. The clip shows how to change an object's Color and layer.",
+  clips:["edit"] },
 
 { id:"D4", day:"day3", name:"Editor License", req:true, size:"Short", pts:150, boss:true,
   readFirst:"Every other required exercise",
@@ -516,7 +518,6 @@ const EX = [
   hint:"Watch for when the gamemode, colors, or speed change. Those are usually the big moments." },
 ];
 
-/* ---------- Daily challenges ---------- */
 const CH = {
  easy:[
   "Draw a heron (our mascot!) using fewer than 40 objects. No text.",
@@ -548,7 +549,6 @@ const CH = {
  ]
 };
 
-/* ---------- App ---------- */
 const store = {
   get(){ try{ return JSON.parse(localStorage.getItem("hda-done")||"{}"); }catch(e){ return {}; } },
   set(v){ try{ localStorage.setItem("hda-done", JSON.stringify(v)); }catch(e){} }
@@ -570,11 +570,12 @@ function songsHTML(){
   return `<div class="lbl">APPROVED SONGS</div><ul>${SONGS.map(s=>`<li><b>${s.id}</b> · ${s.name}</li>`).join("")}</ul>`;
 }
 
-function card(e, idx){
+function card(e){
   const day = DAYS.find(d=>d.id===e.day);
   const cls = e.boss ? "boss" : day.cls;
   const label = e.req ? `<span class="pill p-req">Required</span>` : `<span class="pill p-opt">Bonus · 2x</span>`;
   const pts = e.req ? e.pts : e.pts*2;
+  const clipPill = (e.clips&&e.clips.length) ? `<span class="pill p-clip">▶ Clip</span>` : "";
   let b = `<p class="meta">${e.readFirst?`<b>Do first:</b> ${e.readFirst} · `:""}<b>Size:</b> ${e.size} (${e.size==="Tiny"?"under 10 min":"10 to 20 min"}) · <b>Points:</b> ${pts}</p>`;
   if(e.template){
     const ready = TEMPLATES_READY.includes(e.template);
@@ -591,11 +592,14 @@ function card(e, idx){
   if(e.table) b += `<table class="lab"><tr><th></th><th>Lowest</th><th>Middle</th><th>Highest</th></tr><tr><td>Pads</td><td>?</td><td>?</td><td>?</td></tr><tr><td>Orbs</td><td>?</td><td>?</td><td>?</td></tr></table>`;
   if(e.songs) b += songsHTML();
   b += `<div class="submit">When you're done, turn in ${e.submit}. Title it <b>"${e.name}"</b>.</div>`;
-  if(e.hint) b += `<details class="hint"><summary>Struggling? Open a hint.</summary><p>${e.hint}</p></details>`;
+  if(e.hint || e.clips){
+    const clips = (e.clips||[]).map(clipHTML).join("");
+    b += `<details class="hint"><summary>Struggling? Open a hint${clips?" + clip":""}.</summary>${e.hint?`<p>${e.hint}</p>`:""}${clips}</details>`;
+  }
   b += `<div class="row"><a class="btn m" data-turnin="${e.name}" href="#" target="_blank" rel="noopener">Turn In</a><button class="btn ghost" data-done="${e.id}">${done[e.id]?"✓ Done (undo)":"Mark as done"}</button></div>`;
   return `<details class="ex ${cls} ${done[e.id]?"done":""}" id="ex-${e.id}">
     <summary><div class="num">${done[e.id]?"✓":e.id}</div>
-      <div class="t"><h4>${e.name}</h4>${label}<span class="pill ${e.size==="Tiny"?"p-tiny":"p-short"}">${e.size}</span><span class="pill p-pts">${pts} pts</span></div>
+      <div class="t"><h4>${e.name}</h4>${label}<span class="pill ${e.size==="Tiny"?"p-tiny":"p-short"}">${e.size}</span><span class="pill p-pts">${pts} pts</span>${clipPill}</div>
       <span class="chev">▶</span></summary>
     <div class="body">${b}</div></details>`;
 }
@@ -629,7 +633,7 @@ function wire(){
 function progress(){
   const req=EX.filter(e=>e.req), got=req.filter(e=>done[e.id]);
   const pts=EX.filter(e=>done[e.id]).reduce((s,e)=>s+(e.req?e.pts:e.pts*2),0);
-  let rank="Unranked"; // ranks unlock in order
+  let rank="Unranked";
   for(const d of DAYS){ if(EX.filter(e=>e.req&&e.day===d.id).every(e=>done[e.id])) rank=d.rank; else break; }
   const licensed = req.every(e=>done[e.id]);
   document.getElementById("rankName").textContent = licensed ? "Licensed Heron Dasher" : rank;
@@ -646,8 +650,7 @@ function challenges(){
   const dayNum=Math.floor((Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()))/864e5);
   const pick=(arr,k)=>({i:((dayNum*k)%arr.length+arr.length)%arr.length});
   const e=pick(CH.easy,1).i, m=pick(CH.med,1).i, h=pick(CH.hard,1).i;
-  const g=document.getElementById("chGrid");
-  g.innerHTML=`
+  document.getElementById("chGrid").innerHTML=`
    <div class="ch easy"><h4>Easy #${e+1}</h4><p>${CH.easy[e]}</p><div class="pp">75 points</div></div>
    <div class="ch med"><h4>Medium #${m+1}</h4><p>${CH.med[m]}</p><div class="pp">150 points</div></div>
    <div class="ch hard"><h4>Hard #${h+1}</h4><p>${CH.hard[h]}</p><div class="pp">300 points</div></div>`;
