@@ -213,10 +213,9 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
       <h3 style="font-size:19px;margin-bottom:8px">1. Take your proof</h3>
       <ul class="how">
         <li><b>Screenshot:</b> <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>, then drag a box around the game. (<kbd>PrtSc</kbd> works too.)</li>
-        <li><b>Screen recording:</b> <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd>, drag a box around the game, then click <b>Start</b>. Click the red stop button when you're done. Keep it under 30 seconds.</li>
-        <li>No shortcut working? Open the <b>Snipping Tool</b> app from the Start menu. It has both a camera (screenshot) and a video camera (recording) button.</li>
-        <li>Screenshots save to <b>Pictures → Screenshots</b>. Recordings save to <b>Videos → Screen Recordings</b>.</li>
-        <li>Recording on <b>On the Beat</b>? Turn on the microphone/system sound option in the Snipping Tool so we can hear the beat.</li>
+        <li>No shortcut working? Open the <b>Snipping Tool</b> app from the Start menu and click the camera button.</li>
+        <li>Screenshots save to <b>Pictures → Screenshots</b>.</li>
+        <li>Every exercise is turned in with <b>screenshots</b>. No videos needed.</li>
       </ul>
     </div>
     <div class="panel">
@@ -224,7 +223,7 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
       <ol class="how">
         <li>Click <b>Turn In</b> on the exercise card (or the button below).</li>
         <li>Pick the exercise name from the list.</li>
-        <li>Upload your screenshot, video, or exported level file. You can also paste a Google Drive link.</li>
+        <li>Upload your screenshot (or exported level file, if the exercise asks for one).</li>
         <li>Answer any questions the exercise asks.</li>
       </ol>
       <div class="row"><a class="btn m turnin-any" href="#" target="_blank" rel="noopener">Open the Turn-In Form</a></div>
@@ -247,6 +246,7 @@ const FORM_ENTRY_EXERCISE = ""; // e.g. "123456789"
 const GAME_URL = "https://rockchalknam.github.io/heronrush/";
 const TEMPLATE_FOLDER = "templates/";
 const TEMPLATES_READY = [
+  "be1-starter.txt", "be2-starter.txt",
   "copy-cat.txt", "level-janitor.txt", "crash-detective.txt", "portal-pass.txt",
   // "on-the-beat.txt",  (add once it's uploaded to templates/)
 ];
@@ -332,7 +332,7 @@ const EX = [
 
 { id:"R2", day:"day1", name:"Editor Scout", req:true, size:"Short", pts:100,
   readFirst:"Hello, Editor",
-  intro:"Real builders know their tools without thinking. Your mission: figure out HOW to do each move below. Try it, then write down exactly what you clicked or pressed.",
+  intro:"Real builders know their tools without thinking. Your mission: figure out HOW to do each move below. Try every one in your own level.",
   steps:[
    "<b>Place</b> an object",
    "<b>Select</b> one object, then <b>select several</b> at once",
@@ -344,12 +344,47 @@ const EX = [
    "<b>Undo</b> a mistake",
    "<b>Scroll or zoom</b> the view around your level",
   ],
-  submit:"your 9 answers in the form (one line each), plus a screenshot of your editor",
+  submit:"<b>one screenshot</b> of your editor after you've done all 9 moves",
   hint:"Hover over buttons to see what they do. Try right-click, the scroll wheel, and keyboard shortcuts like Ctrl+Z and Ctrl+D. Ask a neighbor what they found, then test it yourself. Still stuck after really trying? The clips show some of the moves.",
   clips:["place","edit"] },
 
+{ id:"BE1", day:"day1", name:"Basic Editor 1", req:true, size:"Tiny", pts:50,
+  readFirst:"Hello, Editor",
+  intro:"Learn the most basic moves: place, rotate, scale, delete.",
+  template:"be1-starter.txt",
+  templateNote:"The starter has three red outlines (templates) and a \"!\" sign. Don't move or delete the red outlines.",
+  steps:[
+   "Import <b>BE1 Starter</b> and open it. Click the gear, rename it <b>BE1 First L.</b>, check <b>Show Grid</b>, click OK.",
+   "<b>BUILD → Platform → Tile</b>. Place a block on the <b>first</b> red outline.",
+   "<b>BUILD → Obstacle → Spikes</b>. Place a spike on the <b>second</b> outline.",
+   "With the spike selected, click <kbd>[R]</kbd> and press <b>+90</b>. It should point right.",
+   "Place any object on the <b>third</b> outline. Click <kbd>[E]</kbd> and drag BOTH the X and Y sliders to about <b>2.00</b>.",
+   "Click <kbd>[V]</kbd>, select the <b>\"!\" sign</b>, and click <b>Delete</b>.",
+   "Press <kbd>Enter</kbd> to play-test. Click the square to stop. Gear → <b>Save</b>.",
+  ],
+  submit:"a screenshot of the editor (grid on) showing all three objects on the outlines",
+  hint:"Lost a red outline? Click Undo. Spike pointing the wrong way? Try -90 instead.",
+  clips:["place"] },
+
+{ id:"BE2", day:"day1", name:"Basic Editor 2", req:true, size:"Tiny", pts:50,
+  readFirst:"Basic Editor 1",
+  intro:"Change how objects look and where they sit. When you select an object, the editor lists its C1 color, Layer, and Z. Use that to check your work.",
+  template:"be2-starter.txt",
+  templateNote:"The starter has three blocks in a row on flat ground.",
+  steps:[
+   "Import <b>BE2 Starter</b> and open it. Rename it <b>BE2 First L.</b>",
+   "<kbd>[V]</kbd> select <b>Object 1</b> (left). Click <b>Color</b>, then the <b>P3</b> tile (orange). Close the panel.",
+   "Select <b>Object 2</b> (middle). Click <b>Edit Group</b>. Press the left arrow next to <b>ZORDER</b> until it says <b>1</b>. Click OK.",
+   "Select <b>Object 3</b> (right). Click <b>Edit Group</b>. Press the right arrow next to <b>EDITOR L</b> until it says <b>1</b>. Click OK.",
+   "Gear → check <b>Show Hitbox</b> → OK.",
+   "Press <kbd>Enter</kbd> and beat the level with zero deaths. Gear → <b>Save</b>.",
+  ],
+  submit:"3 screenshots, one with each object selected so its info shows (C1: P3, Z: 1, editor layer 1)",
+  hint:"Clicks on the arrows can be slow. Click once, wait a second, then check the number.",
+  clips:["edit"] },
+
 { id:"R3", day:"day1", name:"Object Hunt", req:true, size:"Tiny", pts:50,
-  readFirst:"Editor Scout",
+  readFirst:"Basic Editor 2",
   intro:"Scavenger hunt! Find an object that matches each riddle. Place all five in a row, left to right, in order.",
   riddles:[
    "I launch you into the air the moment you touch me. No clicking needed.",
@@ -438,7 +473,7 @@ const EX = [
    "Add at least <b>3 obstacles</b> to fly around.",
    "Play-test until you beat it <b>3 times in a row</b>. If you can't, it's too hard. Make it fairer.",
   ],
-  submit:"a screen recording of you beating it (or a screenshot if recording isn't working)",
+  submit:"a screenshot of your tunnel in the editor, after you've beaten it 3 times in a row",
   hint:"Ship tip: tap-and-hold to rise, let go to fall. Give the player at least 3 blocks of space to fly through." },
 
 { id:"B4", day:"day2", name:"Start Pos Shortcut", req:true, size:"Tiny", pts:50,
@@ -455,7 +490,7 @@ const EX = [
 
 { id:"BB1", day:"day2", name:"Upside Down", req:false, size:"Short", pts:100,
   intro:"Find a pad, orb, or portal that flips gravity. Build a short section where the player has to run on the ceiling, then flip back down.",
-  submit:"a screenshot or recording of your flip section",
+  submit:"a screenshot of your flip section",
   hint:"Check the cyan pads and orbs, and the Gravity triggers." },
 
 { id:"D1", day:"day3", name:"Drop the Beat", req:true, size:"Tiny", pts:50,
@@ -481,7 +516,7 @@ const EX = [
    "Play-test <b>with sound on</b> (headphones!).",
    "Adjust until clicking feels like clapping along to the song.",
   ],
-  submit:"a screen recording with sound, so we can hear the beat",
+  submit:"a screenshot of your section in the editor with the pink beat lines showing",
   hint:"Jump right at the line, not after it. Count out loud: 1, 2, 3, 4…" },
 
 { id:"D3", day:"day3", name:"Glow Up", req:true, size:"Tiny", pts:50,
@@ -509,7 +544,7 @@ const EX = [
    "Beatable from start to finish",
   ],
   checklist:true,
-  submit:"a screen recording of a full run, start to finish, plus your exported level file. Then show Mr. Nam in person for your sign-off.",
+  submit:"a screenshot of your whole level in the editor, plus your exported level file. Then play it for Mr. Nam in person for your sign-off.",
   hint:"Plan it first: what happens at 0 to 5 seconds, 5 to 10, and 10 to 15? Then build one chunk at a time." },
 
 { id:"DB1", day:"day3", name:"Level Detective", req:false, size:"Short", pts:100,
