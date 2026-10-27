@@ -30,6 +30,9 @@ nav{position:sticky;top:0;z-index:5;background:rgba(18,10,36,.92);backdrop-filte
 nav .wrap{display:flex;gap:6px;overflow-x:auto;padding:10px 16px}
 nav a{white-space:nowrap;text-decoration:none;color:var(--text);padding:7px 12px;border-radius:999px;border:1px solid var(--line);font-size:14px}
 nav a:hover{border-color:var(--cyan)}
+nav a.boardbtn{background:var(--yellow);color:#120a24;border-color:var(--yellow);font-weight:700}
+#boardView{display:none} body.show-board #boardView{display:block} body.show-board main, body.show-board footer{display:none}
+#boardView iframe{display:block;width:100%;height:calc(100vh - 60px);border:0;background:var(--bg)}
 section{padding:28px 0 8px}
 h2{font-size:26px;margin-bottom:12px}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
@@ -128,6 +131,7 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 </header>
 
 <nav><div class="wrap">
+  <a href="#board" class="boardbtn" id="boardToggle">🏆 Class Board</a>
   <a href="#start">Start Here</a>
   <a href="#day1">Day 1: Rookie</a>
   <a href="#day2">Day 2: Builder</a>
@@ -238,6 +242,7 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 </section>
 
 </main>
+<section id="boardView"><iframe id="boardFrame" title="Class live board" loading="lazy"></iframe></section>
 
 <footer>Heron Dashers Academy · Exercise format inspired by the GD Creator School community. Challenge Rush is made by its own developers and used with permission.</footer>
 <div class="toast" id="toast"></div>
@@ -791,6 +796,19 @@ function challenges(){
 }
 
 document.getElementById("playLink").href = GAME_URL;
+function showBoard(on){
+  document.body.classList.toggle("show-board", on);
+  document.getElementById("boardToggle").textContent = on ? "← Back to Academy" : "🏆 Class Board";
+  if(on){
+    const src = "board.html" + (me && me.period ? "?period="+encodeURIComponent(me.period) : "");
+    const f = document.getElementById("boardFrame");
+    if(f.getAttribute("src")!==src) f.setAttribute("src", src);
+    window.scrollTo(0,0);
+  }
+}
+document.getElementById("boardToggle").onclick = ev=>{ ev.preventDefault(); const on=!document.body.classList.contains("show-board"); history.replaceState(null,"",on?"#board":"#start"); showBoard(on); };
+document.querySelectorAll('nav a:not(#boardToggle)').forEach(a=>a.addEventListener("click",()=>showBoard(false)));
+if(location.hash==="#board") showBoard(true);
 render(); challenges(); renderMe(); loadDashers(); sync(); setInterval(sync, SYNC_SECONDS*1000);
 </script>
 </body>
