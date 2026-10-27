@@ -62,6 +62,10 @@ h2{font-size:26px;margin-bottom:12px}
 .ex{background:var(--panel);border:1px solid var(--line);border-left:5px solid var(--cyan);border-radius:var(--radius);overflow:hidden}
 .ex.rookie{border-left-color:var(--green)} .ex.builder{border-left-color:var(--cyan)} .ex.designer{border-left-color:var(--magenta)} .ex.boss{border-left-color:var(--yellow)}
 .ex.done{opacity:.72}
+.me{margin:12px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);font-size:15px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.me select{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:15px}
+.me a{color:var(--cyan)}
+.p-ok{color:var(--green);border-color:var(--green)} .p-nw{color:var(--magenta);border-color:var(--magenta)}
 .ex summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center}
 .ex summary::-webkit-details-marker{display:none}
 .num{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);font:700 15px "Chakra Petch"}
@@ -167,7 +171,8 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
       <div class="pts" id="reqLine">0 / 0 required</div>
     </div>
     <div class="ranks" id="rankRow"></div>
-    <p class="pts" style="margin:10px 0 0;font-size:13px">Your checkmarks save on this laptop only. Mr. Nam's turn-in sheet is the official record.</p>
+    <div class="me" id="meBox"></div>
+    <p class="pts" style="margin:10px 0 0;font-size:13px">Pick your name once. Exercises you turn in check off on their own (give it a minute). Mr. Nam's turn-in sheet is the official record.</p>
   </div>
 </section>
 
@@ -244,6 +249,10 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSegB54pz7rhdrsr_GSi60gcoVFutZPNk1GTCmmfK-Yz2IqhgQ/viewform";
 const FORM_ENTRY_EXERCISE = ""; // e.g. "123456789"
 const GAME_URL = "https://rockchalknam.github.io/heronrush/";
+/* Auto-sync: published CSVs from the turn-in sheet (same links the class board uses) */
+const BOARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTjfPbHDMSSHjDBlXZVB_VZZnTDsyHV_bXrrNF_lRFUx6bAMG124e865k5cl-ABfSGvgobZkmr0QC2-/pub?gid=1334353452&single=true&output=csv";
+const DASHERS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTjfPbHDMSSHjDBlXZVB_VZZnTDsyHV_bXrrNF_lRFUx6bAMG124e865k5cl-ABfSGvgobZkmr0QC2-/pub?gid=1885056124&single=true&output=csv";
+const SYNC_SECONDS = 60;
 const TEMPLATE_FOLDER = "templates/";
 const TEMPLATES_READY = [
   "be1-starter.txt", "be2-starter.txt",
@@ -589,6 +598,94 @@ const store = {
   set(v){ try{ localStorage.setItem("hda-done", JSON.stringify(v)); }catch(e){} }
 };
 let done = store.get();
+const meStore = {
+  get(){ try{ return JSON.parse(localStorage.getItem("hda-me")||"null"); }catch(e){ return null; } },
+  set(v){ try{ v?localStorage.setItem("hda-me", JSON.stringify(v)):localStorage.removeItem("hda-me"); }catch(e){} }
+};
+let me = meStore.get();
+let official = {}, needsWork = {}, DASHERS = [], syncState = "";
+function isDone(id){ return !!(done[id] || official[id]); }
+
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'){ row.push(f); rows.push(row); row=[]; f=""; }
+    else if(c!=='\r') f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r=>r.some(x=>x.trim()!==""));
+}
+async function getCSV(url){
+  const r = await fetch(url+"&t="+Date.now(), {cache:"no-store"});
+  if(!r.ok) throw new Error("fetch "+r.status);
+  return parseCSV(await r.text());
+}
+const norm = v => String(v||"").trim().toLowerCase();
+
+async function loadDashers(){
+  try{
+    const rows = await getCSV(DASHERS_CSV_URL);
+    DASHERS = rows.slice(1).map(r=>({name:(r[0]||"").trim(), period:String(r[1]||"").trim()})).filter(d=>d.name);
+  }catch(e){ DASHERS = []; }
+  renderMe();
+}
+
+async function sync(){
+  if(!me){ official={}; needsWork={}; return; }
+  try{
+    const rows = await getCSV(BOARD_CSV_URL);
+    const h = rows[0].map(norm);
+    const iN=h.indexOf("name"), iP=h.indexOf("period"), iE=h.indexOf("exercise"), iS=h.indexOf("status");
+    const o={}, nw={};
+    rows.slice(1).forEach(r=>{
+      if(norm(r[iN])!==norm(me.name) || String(r[iP]).trim()!==String(me.period)) return;
+      const ex = EX.find(e=>norm(e.name)===norm(r[iE]));
+      if(!ex) return;
+      const st = norm(r[iS]);
+      if(st==="pass") o[ex.id]=true;
+      else if(st==="needs work") nw[ex.id]=true;
+    });
+    Object.keys(o).forEach(k=>delete nw[k]);
+    const changed = JSON.stringify(o)!==JSON.stringify(official) || JSON.stringify(nw)!==JSON.stringify(needsWork);
+    const newOnes = Object.keys(o).filter(k=>!official[k] && syncState==="ok");
+    official=o; needsWork=nw; syncState="ok";
+    if(changed) rerender();
+    renderMe();
+    if(newOnes.length) toast("Turn-in counted! +"+newOnes.map(k=>{const e=EX.find(x=>x.id===k);return e.req?e.pts:e.pts*2;}).reduce((a,b)=>a+b,0)+" points");
+  }catch(e){ syncState="err"; renderMe(); }
+}
+
+function renderMe(){
+  const box = document.getElementById("meBox"); if(!box) return;
+  if(me){
+    const n = Object.keys(official).length;
+    const st = syncState==="ok" ? `${n} turn-in${n===1?"":"s"} found` : syncState==="err" ? "Can't reach the turn-in sheet right now" : "Checking turn-ins...";
+    box.innerHTML = `Dasher: <b>${me.name}</b> · Period ${me.period} · <span class="pts" style="font-size:14px">${st}</span> · <a href="#" id="meChange">Not you?</a>`;
+    document.getElementById("meChange").onclick = ev=>{ ev.preventDefault(); me=null; meStore.set(null); official={}; needsWork={}; syncState=""; rerender(); renderMe(); };
+    return;
+  }
+  const per = box.dataset.per || "";
+  const names = DASHERS.filter(d=>d.period===per).map(d=>d.name).sort();
+  box.innerHTML = `<b>Who are you?</b>
+    <select id="mePer"><option value="">Period</option>${["1","2","3","4"].map(p=>`<option value="${p}" ${p===per?"selected":""}>Period ${p}</option>`).join("")}</select>
+    <select id="meName" ${per?"":"disabled"}><option value="">${DASHERS.length?"Your name":"Loading..."}</option>${names.map(n=>`<option>${n}</option>`).join("")}</select>
+    <button class="btn y" id="meSave" style="padding:6px 12px">Save</button>`;
+  document.getElementById("mePer").onchange = ev=>{ box.dataset.per = ev.target.value; renderMe(); };
+  document.getElementById("meSave").onclick = ()=>{
+    const p=document.getElementById("mePer").value, n=document.getElementById("meName").value;
+    if(!p||!n){ toast("Pick your period and name first."); return; }
+    me={name:n, period:p}; meStore.set(me); syncState=""; renderMe(); sync();
+  };
+}
+
+function rerender(){
+  const open=[...document.querySelectorAll("details.ex[open]")].map(d=>d.id);
+  render(); open.forEach(i=>{const d=document.getElementById(i); if(d) d.open=true;});
+}
 
 function formLink(exName){
   if(!FORM_URL || FORM_URL.startsWith("PASTE")) return null;
@@ -631,9 +728,11 @@ function card(e){
     const clips = (e.clips||[]).map(clipHTML).join("");
     b += `<details class="hint"><summary>Struggling? Open a hint${clips?" + clip":""}.</summary>${e.hint?`<p>${e.hint}</p>`:""}${clips}</details>`;
   }
-  b += `<div class="row"><a class="btn m" data-turnin="${e.name}" href="#" target="_blank" rel="noopener">Turn In</a><button class="btn ghost" data-done="${e.id}">${done[e.id]?"✓ Done (undo)":"Mark as done"}</button></div>`;
-  return `<details class="ex ${cls} ${done[e.id]?"done":""}" id="ex-${e.id}">
-    <summary><div class="num">${done[e.id]?"✓":e.id}</div>
+  const statusBit = official[e.id] ? `<span class="pill p-ok">✓ Turned in and counted</span>`
+    : `${needsWork[e.id]?`<span class="pill p-nw">Needs work: fix it and turn it in again</span>`:""}<button class="btn ghost" data-done="${e.id}">${done[e.id]?"✓ Done (undo)":"Mark as done"}</button>`;
+  b += `<div class="row"><a class="btn m" data-turnin="${e.name}" href="#" target="_blank" rel="noopener">Turn In</a>${statusBit}</div>`;
+  return `<details class="ex ${cls} ${isDone(e.id)?"done":""}" id="ex-${e.id}">
+    <summary><div class="num">${isDone(e.id)?"✓":e.id}</div>
       <div class="t"><h4>${e.name}</h4>${label}<span class="pill ${e.size==="Tiny"?"p-tiny":"p-short"}">${e.size}</span><span class="pill p-pts">${pts} pts</span>${clipPill}</div>
       <span class="chev">▶</span></summary>
     <div class="body">${b}</div></details>`;
@@ -654,8 +753,7 @@ function wire(){
   document.querySelectorAll("[data-done]").forEach(btn=>btn.onclick=()=>{
     const id=btn.dataset.done; done[id]=!done[id]; if(!done[id]) delete done[id];
     store.set(done);
-    const open=[...document.querySelectorAll("details.ex[open]")].map(d=>d.id);
-    render(); open.forEach(i=>{const d=document.getElementById(i); if(d) d.open=true;});
+    rerender();
     if(done[id]) toast("Nice! Don't forget to turn it in.");
   });
   document.querySelectorAll("[data-turnin], .turnin-any").forEach(a=>a.onclick=(ev)=>{
@@ -666,11 +764,11 @@ function wire(){
 }
 
 function progress(){
-  const req=EX.filter(e=>e.req), got=req.filter(e=>done[e.id]);
-  const pts=EX.filter(e=>done[e.id]).reduce((s,e)=>s+(e.req?e.pts:e.pts*2),0);
+  const req=EX.filter(e=>e.req), got=req.filter(e=>isDone(e.id));
+  const pts=EX.filter(e=>isDone(e.id)).reduce((s,e)=>s+(e.req?e.pts:e.pts*2),0);
   let rank="Unranked";
-  for(const d of DAYS){ if(EX.filter(e=>e.req&&e.day===d.id).every(e=>done[e.id])) rank=d.rank; else break; }
-  const licensed = req.every(e=>done[e.id]);
+  for(const d of DAYS){ if(EX.filter(e=>e.req&&e.day===d.id).every(e=>isDone(e.id))) rank=d.rank; else break; }
+  const licensed = req.every(e=>isDone(e.id));
   document.getElementById("rankName").textContent = licensed ? "Licensed Heron Dasher" : rank;
   document.getElementById("ptsLine").textContent = pts+" points";
   document.getElementById("reqLine").textContent = `${got.length} / ${req.length} required`;
@@ -693,7 +791,7 @@ function challenges(){
 }
 
 document.getElementById("playLink").href = GAME_URL;
-render(); challenges();
+render(); challenges(); renderMe(); loadDashers(); sync(); setInterval(sync, SYNC_SECONDS*1000);
 </script>
 </body>
 </html>
