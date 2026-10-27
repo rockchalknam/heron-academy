@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heron Academy Live Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Lexend:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#120a24; --panel:#1c1236; --panel2:#251847; --line:#3a2a66;
+  --text:#f2eefc; --muted:#b7aed3; --cyan:#3ee6ff; --magenta:#ff4fd8; --yellow:#ffd84a;
+  --green:#5dff9b; --red:#ff5a6e; --radius:16px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:18px/1.45 Lexend,system-ui,sans-serif;
+  background-image:radial-gradient(circle at 15% 0%,#2a1460 0,transparent 45%),radial-gradient(circle at 100% 30%,#1a0f45 0,transparent 40%);min-height:100vh}
+h1,h2,h3{font-family:"Chakra Petch",Lexend,sans-serif;margin:0;line-height:1.1}
+.wrap{max-width:1500px;margin:0 auto;padding:20px 24px 30px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+h1{font-size:clamp(28px,4vw,46px)}
+h1 span{color:var(--cyan);text-shadow:0 0 18px rgba(62,230,255,.5)}
+.live{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:15px}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);animation:pulse 1.6s infinite}
+.dot.off{background:var(--red);box-shadow:0 0 12px var(--red);animation:none}
+@keyframes pulse{50%{opacity:.35}}
+select{font:600 16px Lexend;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.grid{display:grid;gap:18px}
+@media(min-width:1000px){.main{grid-template-columns:1.25fr 1fr}}
+/* class meter */
+.meterTop{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.big{font:700 clamp(46px,7vw,88px) "Chakra Petch";color:var(--yellow);text-shadow:0 0 22px rgba(255,216,74,.35)}
+.goal{color:var(--muted);font-size:20px}
+.meter{position:relative;height:46px;background:var(--panel2);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:16px 0 10px}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--yellow));border-radius:99px;transition:width 1.2s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 24px rgba(255,79,216,.5)}
+.tick{position:absolute;top:0;bottom:0;width:3px;background:rgba(18,10,36,.85)}
+.miles{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:15px}
+.mile{padding:6px 10px;border-radius:10px;border:1px dashed var(--line);color:var(--muted)}
+.mile.on{border-style:solid;border-color:var(--green);color:var(--green)}
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px}
+.stat{flex:1;min-width:150px;background:var(--panel2);border-radius:12px;padding:12px 14px}
+.stat b{display:block;font:700 32px "Chakra Petch";color:var(--cyan)}
+.stat span{color:var(--muted);font-size:14px}
+/* period race */
+.race .row{display:grid;grid-template-columns:120px 1fr 90px;gap:12px;align-items:center;margin:10px 0}
+.race .lab{font:700 20px "Chakra Petch"}
+.race .bar{height:26px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.race .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--magenta));transition:width 1s}
+.race .row.lead .bar i{background:linear-gradient(90deg,var(--yellow),var(--magenta))}
+.race .pts{text-align:right;font:700 20px "Chakra Petch";color:var(--yellow)}
+h2{font-size:26px;margin-bottom:12px}
+/* leaderboard */
+table{width:100%;border-collapse:collapse;font-size:20px}
+th{color:var(--muted);font-size:14px;font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid #2a1f4d}
+td.n{width:52px;font:700 22px "Chakra Petch";color:var(--muted)}
+tr.p1 td.n{color:var(--yellow)} tr.p2 td.n{color:#d9e1ff} tr.p3 td.n{color:#ffb070}
+td.pts{text-align:right;font:700 22px "Chakra Petch";color:var(--yellow)}
+.rk{display:inline-block;font-size:13px;font-weight:700;padding:3px 9px;border-radius:99px;border:1px solid;margin-left:8px;vertical-align:middle}
+.rk.Unranked{color:var(--muted);border-color:var(--line)}
+.rk.Rookie{color:var(--green);border-color:var(--green)}
+.rk.Builder{color:var(--cyan);border-color:var(--cyan)}
+.rk.Designer{color:var(--magenta);border-color:var(--magenta)}
+.rk.Licensed{color:#120a24;background:var(--yellow);border-color:var(--yellow)}
+.mini{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:5px;max-width:260px}
+.mini i{display:block;height:100%;background:var(--green)}
+tr.flash td{animation:flash 2.5s}
+@keyframes flash{0%,40%{background:rgba(255,216,74,.22)}100%{background:transparent}}
+/* feed */
+.feed{list-style:none;margin:0;padding:0}
+.feed li{display:flex;justify-content:space-between;gap:10px;padding:10px 4px;border-bottom:1px solid #2a1f4d;font-size:18px}
+.feed li b{color:var(--cyan)}
+.feed li .plus{font:700 18px "Chakra Petch";color:var(--green);white-space:nowrap}
+.feed li.new{animation:flash 3s}
+.empty{color:var(--muted);font-size:16px;padding:10px 0}
+.note{color:var(--muted);font-size:13px;margin-top:10px}
+.toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-300%);background:var(--yellow);color:#120a24;font:700 26px "Chakra Petch";padding:14px 24px;border-radius:14px;transition:transform .45s cubic-bezier(.2,.9,.3,1.3);z-index:20;box-shadow:0 10px 40px rgba(0,0,0,.5);text-align:center;max-width:92vw}
+.toast.show{transform:translate(-50%,0)}
+.roster{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.tile{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.tile .nm{font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:8px}
+.tile .nm span{color:var(--yellow);font-family:"Chakra Petch"}
+.tile .sub{font-size:13px;color:var(--muted)}
+.tile.ready .nm span{color:var(--muted);font-family:Lexend;font-weight:500;font-size:13px}
+.tile.ready{border-style:dashed}
+.tile.flash{animation:flash 2.5s}
+.perHead{font:700 18px "Chakra Petch";color:var(--cyan);margin:14px 0 8px}
+.earned{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.earned .badge{display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgba(255,216,74,.18),rgba(255,79,216,.12));border:2px solid var(--yellow);border-radius:14px;padding:10px 16px}
+.earned .badge b{font:700 22px "Chakra Petch";color:var(--yellow)}
+.earned .badge span{color:var(--muted);font-size:14px}
+.earned .badge.pop{animation:pop 1.2s}
+@keyframes pop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+.perk{display:inline-block;font-size:12px;font-weight:700;color:#120a24;background:var(--green);border-radius:99px;padding:2px 8px;margin-top:6px}
+.err{background:rgba(255,90,110,.12);border:1px solid var(--red);color:#ffd0d6;border-radius:12px;padding:12px 14px;margin-bottom:16px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Heron Academy <span>Live Board</span></h1>
+    <div class="live">
+      <select id="periodSel" aria-label="Show period"><option value="ALL">All periods</option></select>
+      <span class="dot" id="dot"></span><span id="updated">Loading…</span>
+    </div>
+  </header>
+
+  <div class="err" id="err"></div>
+
+  <section class="panel">
+    <div class="meterTop">
+      <div><div class="big" id="classPts">0</div><div class="goal" id="goalLine">class points</div></div>
+      <div style="text-align:right"><h3 style="font-size:24px" id="meterTitle">Class Goal</h3><div class="goal" id="nextMile"></div></div>
+    </div>
+    <div class="meter" id="meter"><div class="fill" id="fill"></div></div>
+    <div class="miles" id="miles"></div>
+    <div class="earned" id="earned"></div>
+    <div class="stats">
+      <div class="stat"><b id="sTurnins">0</b><span>turn-ins</span></div>
+      <div class="stat"><b id="sStudents">0</b><span id="sStudentsLbl">Dashers on the board</span></div>
+      <div class="stat"><b id="sLicensed">0</b><span>Editor Licenses</span></div>
+      <div class="stat"><b id="sToday">0</b><span>turn-ins today</span></div>
+    </div>
+  </section>
+
+  <div class="grid main" style="margin-top:18px">
+    <section class="panel">
+      <h2>Top Dashers</h2>
+      <table><thead><tr><th>#</th><th>Dasher</th><th>Required done</th><th style="text-align:right">Points</th></tr></thead>
+      <tbody id="board"></tbody></table>
+      <p class="note">Points count once per exercise. Re-submitting the same exercise doesn't double count.</p>
+    </section>
+    <div class="grid">
+      <section class="panel race" id="raceBox">
+        <h2>Period Race</h2>
+        <div id="race"></div>
+      </section>
+      <section class="panel">
+        <h2>Just Turned In</h2>
+        <ul class="feed" id="feed"></ul>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel" id="rosterBox" style="margin-top:18px;display:none">
+    <h2>Every Dasher</h2>
+    <div id="rosterList"></div>
+    <p class="note">Bars show required exercises done. Everyone starts at "Ready to launch."</p>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   MR. NAM: SETTINGS
+   1. SHEET_CSV_URL: the "Publish to web" CSV link of your
+      BOARD tab (only name, period, exercise). See setup steps.
+      Leave blank to see demo data.
+   2. CLASS_GOAL and MILESTONES: what the whole class is working toward.
+   ========================================================= */
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTjfPbHDMSSHjDBlXZVB_VZZnTDsyHV_bXrrNF_lRFUx6bAMG124e865k5cl-ABfSGvgobZkmr0QC2-/pub?gid=1334353452&single=true&output=csv";  // Board tab
+/* ROSTER_CSV_URL: "Publish to web" CSV link of your ROSTER tab.
+   Use the "Dashers" tab (Name, Period). No emails are published.
+   Leave blank to only show students who have turned something in. */
+const ROSTER_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTjfPbHDMSSHjDBlXZVB_VZZnTDsyHV_bXrrNF_lRFUx6bAMG124e865k5cl-ABfSGvgobZkmr0QC2-/pub?gid=1885056124&single=true&output=csv";  // Dashers tab (must be published too)
+const ONLY_COUNT_PASS = true;   // only turn-ins marked "Pass" in the Status column count
+const REFRESH_SECONDS = 30;
+const CLASS_GOAL = 10000;
+const MILESTONES = [
+  { pts: 2500,  reward: "Free seating Friday" },
+  { pts: 5000,  reward: "Free seating all week" },
+  { pts: 7500,  reward: "Class tournament" },
+  { pts: 10000, reward: "Free seating rest of unit", allDashers:true },  // also needs every Dasher on the board
+];
+/* Personal perks: what each rank earns a student. Edit freely. */
+const RANK_PERKS = {
+  Rookie:   "Seat pick",
+  Builder:  "Seat pick",
+  Designer: "Seat pick + bonus challenge",
+  Licensed: "Free build pass",
+};
+const SHOW_TOP = 12;            // how many students on the leaderboard
+const EXCLUDE_STATUS = ["needs work","redo","no"];  // rows with these in a Status column don't count
+
+/* Exercise points: must match the Academy page. Bonus = already doubled. */
+const EXERCISES = [
+  { name:"Hello, Editor",       pts:50,  req:true,  day:1 },
+  { name:"Editor Scout",        pts:100, req:true,  day:1 },
+  { name:"Basic Editor 1",      pts:50,  req:true,  day:1 },
+  { name:"Basic Editor 2",      pts:50,  req:true,  day:1 },
+  { name:"Object Hunt",         pts:50,  req:true,  day:1 },
+  { name:"Copy Cat",            pts:100, req:true,  day:1 },
+  { name:"Level Janitor",       pts:200, req:false, day:1 },
+  { name:"Name Sign",           pts:100, req:false, day:1 },
+  { name:"Jump Lab",            pts:100, req:true,  day:2 },
+  { name:"Crash Detective",     pts:50,  req:true,  day:2 },
+  { name:"Portal Pass",         pts:100, req:true,  day:2 },
+  { name:"Start Pos Shortcut",  pts:50,  req:true,  day:2 },
+  { name:"Upside Down",         pts:200, req:false, day:2 },
+  { name:"Drop the Beat",       pts:50,  req:true,  day:3 },
+  { name:"On the Beat",         pts:100, req:true,  day:3 },
+  { name:"Glow Up",             pts:50,  req:true,  day:3 },
+  { name:"Editor License",      pts:150, req:true,  day:3 },
+  { name:"Level Detective",     pts:200, req:false, day:3 },
+];
+const CHALLENGE_PTS = { easy:75, medium:150, hard:300 };
+
+/* ---------- helpers ---------- */
+const norm = s => String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+const EXN = EXERCISES.map(e=>({...e, key:norm(e.name)})).sort((a,b)=>b.key.length-a.key.length);
+const REQ_COUNT = EXERCISES.filter(e=>e.req).length;
+
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'){ row.push(f); rows.push(row); row=[]; f=""; }
+    else if(c!=='\r') f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r=>r.some(x=>x.trim()!==""));
+}
+function displayName(raw){
+  const parts=String(raw||"").trim().replace(/\s+/g," ").split(" ").filter(Boolean);
+  if(!parts.length) return "";
+  const cap=w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase();
+  const first=cap(parts[0]);
+  if(parts.length===1) return first;
+  const last=parts[parts.length-1].replace(/\./g,"");
+  return `${first} ${last.charAt(0).toUpperCase()}.`;
+}
+function matchExercise(raw){
+  const n=norm(raw);
+  const ch=n.match(/challenge\s*(easy|medium|med|hard)\s*(\d+)?/);
+  if(ch){ const lvl=ch[1]==="med"?"medium":ch[1]; return {name:`Challenge: ${lvl[0].toUpperCase()+lvl.slice(1)}${ch[2]?" #"+ch[2]:""}`, pts:CHALLENGE_PTS[lvl], req:false, challenge:true, lvl}; }
+  return EXN.find(e=>n.includes(e.key)) || null;
+}
+function findCol(headers, words){
+  const h=headers.map(norm);
+  for(const w of words){ const i=h.findIndex(x=>x.includes(w)); if(i>-1) return i; }
+  return -1;
+}
+function rankFor(reqDone){
+  const days=[1,2,3], names=["Rookie","Builder","Designer"]; let r="Unranked";
+  for(let i=0;i<days.length;i++){
+    const need=EXERCISES.filter(e=>e.req&&e.day===days[i]).map(e=>e.name);
+    if(need.every(n=>reqDone.has(n))) r=names[i]; else break;
+  }
+  if(reqDone.size>=REQ_COUNT) r="Licensed";
+  return r;
+}
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- roster ---------- */
+let ROSTER=[];
+function loadRoster(rows){
+  const H=rows[0]||[]; const cF=findCol(H,["first"]), cL=findCol(H,["last"]), cN=findCol(H,["name"]), cP=findCol(H,["period","class"]), cM=findCol(H,["email"]);
+  return rows.slice(1).map(r=>{
+    const full = cF>-1 ? `${r[cF]||""} ${cL>-1?r[cL]||"":""}` : (cN>-1?r[cN]:"");
+    const first = norm(full).split(" ")[0]||"", last = norm(full).split(" ").slice(1).join(" ");
+    return { name:displayName(full), first, last, per:cP>-1?String(r[cP]||"").trim().replace(/^period\s*/i,""):"", email:cM>-1?String(r[cM]||"").trim().toLowerCase():"" };
+  }).filter(x=>x.name);
+}
+function rosterMatch(email, rawName){
+  if(!ROSTER.length) return null;
+  const e=String(email||"").trim().toLowerCase();
+  if(e){ const m=ROSTER.find(x=>x.email&&x.email===e); if(m) return m; }
+  const n=norm(rawName).split(" "); if(!n[0]) return null;
+  const f=n[0], l=n.slice(1).join(" ");
+  let c=ROSTER.filter(x=>x.first===f);
+  if(c.length>1 && l) c=c.filter(x=>x.last.startsWith(l[0]) );
+  if(c.length>1 && l) c=c.filter(x=>x.last===l||x.last.startsWith(l));
+  return c.length===1?c[0]:null;
+}
+
+/* ---------- demo data ---------- */
+function demoRoster(){
+  const names=["Ava Ruiz","Liam Tran","Maya Singh","Noah Kim","Zoe Park","Eli Moss","Mia West","Leo Brown","Ivy Chen","Kai Diaz","Nora Fox","Owen Hall","Luna James","Finn Gray","Sam Ortiz","Ruby Lane"];
+  return [["First","Last","Period"]].concat(names.map((n,i)=>[n.split(" ")[0],n.split(" ")[1],["1","2","3","4"][i%4]]));
+}
+function demoRows(){
+  const names=["Ava R","Liam T","Maya S","Noah K","Zoe P","Eli M","Mia W","Leo B","Ivy C","Kai D","Nora F","Owen H","Luna J","Finn G"];
+  const per=["1","2","3","4"], ex=EXERCISES.slice(0,12).map(e=>e.name).concat(["Challenge: Easy #3","Challenge: Medium #1"]);
+  const rows=[["Timestamp","Your name","Class period","Exercise"]]; const now=Date.now();
+  let seed=7; const rnd=n=>{seed=(seed*9301+49297)%233280; return Math.floor(seed/233280*n);};
+  for(let i=0;i<70;i++){ const nm=names[rnd(names.length)]; rows.push([new Date(now-(70-i)*9e5).toLocaleString(), nm, per[names.indexOf(nm)%4], ex[Math.min(ex.length-1,rnd(ex.length))]]); }
+  return rows;
+}
+
+/* ---------- state + compute ---------- */
+let lastCount=-1, seenKeys=new Set(), firstLoad=true, lastUnlocked=0, lastPeriod="ALL";
+
+function compute(rows, period){
+  const H=rows[0]||[];
+  const cTime=findCol(H,["timestamp","time"]), cName=findCol(H,["name"]), cPer=findCol(H,["period","class"]), cEx=findCol(H,["exercise","assignment","what are you turning in"]), cStat=findCol(H,["status","grade","pass"]), cMail=findCol(H,["email"]);
+  if(cName<0&&cMail>-1&&ROSTER.length){} else if(cName<0||cEx<0) throw new Error("Couldn't find the Name and Exercise columns. Make sure the board tab's first row has headers with the words \"name\" and \"exercise\".");
+  const students=new Map(), feed=[], periods=new Map(), timeline=[]; let turnins=0, today=0; const todayStr=new Date().toDateString();
+  rows.slice(1).forEach((r,idx)=>{
+    const rs=rosterMatch(cMail>-1?r[cMail]:"", cName>-1?r[cName]:"");
+    const name=rs?rs.name:displayName(cName>-1?r[cName]:""); if(!name) return;
+    const per=rs&&rs.per?rs.per:(cPer>-1?String(r[cPer]||"").trim().replace(/^period\s*/i,""):"");
+    if(period!=="ALL" && per!==period) { if(per) periods.set(per,periods.get(per)||0); return; }
+    if(cStat>-1 && EXCLUDE_STATUS.includes(norm(r[cStat]))) return;
+    if(ONLY_COUNT_PASS && (cStat<0 || norm(r[cStat])!=="pass")) return;
+    const ex=matchExercise(r[cEx]); if(!ex) return;
+    const when=cTime>-1?new Date(r[cTime]):null;
+    const dayKey=when&&!isNaN(when)?when.toDateString():"";
+    turnins++; if(dayKey===todayStr) today++;
+    const id=name+"|"+per;
+    if(!students.has(id)) students.set(id,{name,per,pts:0,done:new Set(),req:new Set(),last:0});
+    const s=students.get(id);
+    const doneKey=ex.challenge?ex.name+"|"+dayKey:ex.name;
+    let gained=0;
+    if(!s.done.has(doneKey)){ s.done.add(doneKey); s.pts+=ex.pts; gained=ex.pts; timeline.push({t:when&&!isNaN(when)?when:null, pts:ex.pts, id}); if(ex.req) s.req.add(ex.name); if(per) periods.set(per,(periods.get(per)||0)+ex.pts); }
+    s.last=idx;
+    feed.push({key:idx+"|"+name+"|"+ex.name, name, ex:ex.name, gained, per});
+  });
+  ROSTER.forEach(rr=>{ if(period!=="ALL"&&rr.per!==period) return; const id=rr.name+"|"+rr.per; if(!students.has(id)) students.set(id,{name:rr.name,per:rr.per,pts:0,done:new Set(),req:new Set(),last:-1}); });
+  const list=[...students.values()].map(s=>({...s,rank:rankFor(s.req)})).sort((a,b)=>b.pts-a.pts||b.req.size-a.req.size||a.name.localeCompare(b.name));
+  const total=list.reduce((t,s)=>t+s.pts,0);
+  const active=list.filter(x=>x.pts>0).length;
+  const perCount = period!=="ALL" ? 1 : Math.max(1, new Set((ROSTER.length?ROSTER.map(r=>r.per):[...periods.keys()]).filter(Boolean)).size);
+  const MS = MILESTONES.map(m=>({...m, pts:m.pts*perCount})), goal = CLASS_GOAL*perCount;
+  let run=0; const unlocked=[], onBoard=new Set(), need=list.length;
+  timeline.forEach(ev=>{ run+=ev.pts; onBoard.add(ev.id);
+    MS.forEach(m=>{ if(unlocked.some(u=>u.pts===m.pts)) return;
+      if(run>=m.pts && (!m.allDashers || onBoard.size>=need)) unlocked.push({...m, t:ev.t}); }); });
+  unlocked.sort((a,b)=>a.pts-b.pts);
+  return {list,total,active,unlocked,MS,goal,perCount,turnins,today,feed:feed.slice(-8).reverse(),periods,licensed:list.filter(s=>s.rank==="Licensed").length, hasPeriod:cPer>-1};
+}
+
+/* ---------- render ---------- */
+function render(d, period){
+  document.getElementById("classPts").textContent=d.total.toLocaleString();
+  document.getElementById("goalLine").textContent=`of ${d.goal.toLocaleString()} ${d.perCount>1?"points (all "+d.perCount+" periods)":"class points"}`;
+  document.getElementById("meterTitle").textContent= period==="ALL" ? "Whole-Class Goal" : `Period ${period} Goal`;
+  const pct=Math.min(100,d.total/d.goal*100);
+  document.getElementById("fill").style.width=pct+"%";
+  const meter=document.getElementById("meter");
+  meter.querySelectorAll(".tick").forEach(t=>t.remove());
+  d.MS.forEach(m=>{ if(m.pts<d.goal){ const t=document.createElement("div"); t.className="tick"; t.style.left=(m.pts/d.goal*100)+"%"; meter.appendChild(t);} });
+  const isOn=m=>d.unlocked.some(u=>u.pts===m.pts);
+  document.getElementById("miles").innerHTML=d.MS.map(m=>`<span class="mile ${isOn(m)?"on":""}">${isOn(m)?"★":"☆"} ${m.pts.toLocaleString()}${m.allDashers?" + every Dasher":""}: ${esc(m.reward)}</span>`).join("");
+  const fmt=t=>t?t.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}):"";
+  document.getElementById("earned").innerHTML = d.unlocked.length
+    ? d.unlocked.map((m,i)=>`<div class="badge ${d.newUnlock&&i===d.unlocked.length-1?"pop":""}">🔓<div><b>${esc(m.reward)}</b><br><span>Earned${m.t?" "+fmt(m.t):""}${period==="ALL"?" by the whole class":" by Period "+esc(period)}</span></div></div>`).join("")
+    : "";
+  const next=d.MS.find(m=>!isOn(m));
+  let msg="Every reward unlocked! 🎉";
+  if(next){
+    const ptsLeft=Math.max(0,next.pts-d.total), missing=d.list.length-d.active;
+    if(ptsLeft>0) msg=`${ptsLeft.toLocaleString()} points to ${next.reward}`;
+    else if(next.allDashers) msg=`Points reached! ${d.active} / ${d.list.length} Dashers on the board. ${missing} to go for ${next.reward}!`;
+  }
+  document.getElementById("nextMile").textContent = msg;
+  document.getElementById("sTurnins").textContent=d.turnins;
+  if(ROSTER.length){ document.getElementById("sStudents").textContent=`${d.active} / ${d.list.length}`; document.getElementById("sStudentsLbl").textContent="Dashers on the board"; }
+  else document.getElementById("sStudents").textContent=d.list.length;
+  document.getElementById("sLicensed").textContent=d.licensed;
+  document.getElementById("sToday").textContent=d.today;
+
+  const tb=document.getElementById("board");
+  const ranked=d.list.filter(x=>x.pts>0);
+  tb.innerHTML = ranked.length ? ranked.slice(0,SHOW_TOP).map((s,i)=>`
+    <tr class="p${i+1}${s.flash?" flash":""}"><td class="n">${i+1}</td>
+      <td>${esc(s.name)}${s.per&&period==="ALL"?` <span style="color:var(--muted);font-size:14px">P${esc(s.per)}</span>`:""}<span class="rk ${s.rank}">${s.rank==="Licensed"?"★ Licensed":s.rank}</span>${RANK_PERKS[s.rank]?`<br><span class="perk">🎟 ${esc(RANK_PERKS[s.rank])}</span>`:""}</td>
+      <td>${s.req.size} / ${REQ_COUNT}<div class="mini"><i style="width:${s.req.size/REQ_COUNT*100}%"></i></div></td>
+      <td class="pts">${s.pts.toLocaleString()}</td></tr>`).join("")
+    : `<tr><td colspan="4" class="empty">No turn-ins yet. Be the first on the board!</td></tr>`;
+
+  const rb=document.getElementById("rosterBox");
+  if(!ROSTER.length){ rb.style.display="none"; }
+  else{
+    rb.style.display="";
+    const groups=new Map();
+    [...d.list].sort((a,b)=>a.name.localeCompare(b.name)).forEach(s=>{ const k=s.per||""; if(!groups.has(k)) groups.set(k,[]); groups.get(k).push(s); });
+    const keys=[...groups.keys()].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    document.getElementById("rosterList").innerHTML=keys.map(k=>`${keys.length>1||period!=="ALL"?`<div class="perHead">${k?"Period "+esc(k):"No period"}</div>`:""}<div class="roster">${groups.get(k).map(s=>`
+      <div class="tile ${s.pts?"":"ready"} ${s.flash?"flash":""}"><div class="nm">${esc(s.name)}<span>${s.pts?s.pts.toLocaleString()+" pts":"Ready to launch"}</span></div>
+      <div class="mini" style="max-width:none"><i style="width:${s.req.size/REQ_COUNT*100}%"></i></div>
+      <div class="sub">${s.req.size} / ${REQ_COUNT} required${s.rank!=="Unranked"?" · "+s.rank:""}</div>${RANK_PERKS[s.rank]?`<span class="perk">🎟 ${esc(RANK_PERKS[s.rank])}</span>`:""}</div>`).join("")}</div>`).join("");
+  }
+
+  const raceBox=document.getElementById("raceBox");
+  const ps=[...d.periods.entries()].filter(([p])=>p).sort((a,b)=>a[0].localeCompare(b[0],undefined,{numeric:true}));
+  if(!d.hasPeriod || ps.length<2 || period!=="ALL"){ raceBox.style.display="none"; }
+  else{
+    raceBox.style.display="";
+    const max=Math.max(1,...ps.map(p=>p[1])), lead=ps.reduce((a,b)=>b[1]>a[1]?b:a)[0];
+    document.getElementById("race").innerHTML=ps.map(([p,v])=>`<div class="row ${p===lead&&v>0?"lead":""}"><div class="lab">Period ${esc(p)}</div><div class="bar"><i style="width:${v/max*100}%"></i></div><div class="pts">${v.toLocaleString()}</div></div>`).join("");
+  }
+
+  document.getElementById("feed").innerHTML = d.feed.length ? d.feed.map(f=>`<li class="${f.isNew?"new":""}"><span><b>${esc(f.name)}</b> finished ${esc(f.ex)}</span><span class="plus">${f.gained?"+"+f.gained:"resubmit"}</span></li>`).join("") : `<li class="empty">Waiting for the first turn-in…</li>`;
+}
+
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),3500); }
+
+let ROWS=[];
+async function load(){
+  const dot=document.getElementById("dot"), err=document.getElementById("err");
+  try{
+    if(ROSTER_CSV_URL){
+      const rr=await fetch(ROSTER_CSV_URL+(ROSTER_CSV_URL.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
+      if(!rr.ok) throw new Error("The roster didn't load ("+rr.status+"). Check that the Roster tab is published to the web as CSV.");
+      ROSTER=loadRoster(parseCSV(await rr.text()));
+    } else if(!SHEET_CSV_URL){ ROSTER=loadRoster(demoRoster()); }
+    if(SHEET_CSV_URL){
+      const res=await fetch(SHEET_CSV_URL+(SHEET_CSV_URL.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
+      if(!res.ok) throw new Error("The sheet didn't load ("+res.status+"). Check that the board tab is published to the web as CSV.");
+      ROWS=parseCSV(await res.text());
+    } else ROWS=demoRows();
+    err.style.display="none"; dot.classList.remove("off");
+    draw(true);
+    document.getElementById("updated").textContent=(SHEET_CSV_URL?"Live · updated ":"DEMO DATA · ")+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+  }catch(e){
+    dot.classList.add("off"); err.style.display="block"; err.textContent=e.message;
+    document.getElementById("updated").textContent="Can't reach the sheet. Retrying…";
+  }
+}
+function draw(fromLoad){
+  const sel=document.getElementById("periodSel"), period=sel.value;
+  let d; try{ d=compute(ROWS, period); }catch(e){ const err=document.getElementById("err"); err.style.display="block"; err.textContent=e.message; return; }
+  // period dropdown
+  const allPer=[...compute(ROWS,"ALL").periods.keys()].filter(Boolean).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  const have=[...sel.options].map(o=>o.value);
+  allPer.forEach(p=>{ if(!have.includes(p)){ const o=document.createElement("option"); o.value=p; o.textContent="Period "+p; sel.appendChild(o);} });
+  // new turn-in celebration
+  if(fromLoad){
+    const fresh=d.feed.filter(f=>!seenKeys.has(f.key));
+    if(!firstLoad && fresh.length){
+      fresh.forEach(f=>f.isNew=true);
+      const names=new Set(fresh.map(f=>f.name));
+      d.list.forEach(s=>{ if(names.has(s.name)) s.flash=true; });
+      const f=fresh[0]; toast(`🎉 ${f.name} finished ${f.ex}${f.gained?"  +"+f.gained:""}`);
+    }
+    if(!firstLoad && d.unlocked.length>lastUnlocked && period===lastPeriod){ d.newUnlock=true; setTimeout(()=>toast(`🔓 UNLOCKED: ${d.unlocked[d.unlocked.length-1].reward}!`),3800); }
+    lastUnlocked=d.unlocked.length; lastPeriod=period;
+    d.feed.forEach(f=>seenKeys.add(f.key));
+    compute(ROWS,"ALL").feed.forEach(f=>seenKeys.add(f.key));
+    firstLoad=false;
+  }
+  render(d, period);
+}
+document.getElementById("periodSel").onchange=()=>draw(false);
+const qp=new URLSearchParams(location.search).get("period"); if(qp){ const o=document.createElement("option"); o.value=qp; o.textContent="Period "+qp; document.getElementById("periodSel").appendChild(o); document.getElementById("periodSel").value=qp; }
+load(); setInterval(load, REFRESH_SECONDS*1000);
+</script>
+</body>
+</html>
