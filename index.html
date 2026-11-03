@@ -112,6 +112,19 @@ kbd{background:var(--panel2);border:1px solid var(--line);border-bottom-width:3p
 footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(120px);background:var(--yellow);color:#120a24;font-weight:700;padding:10px 16px;border-radius:10px;transition:transform .3s;z-index:20}
 .toast.show{transform:translateX(-50%) translateY(0)}
+.risebar{margin:0 auto 16px}
+.risebar .in{display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(100deg,#2a1460,#1c1236 55%);border:1px solid var(--magenta);border-radius:var(--radius);padding:16px 18px;box-shadow:0 0 24px rgba(255,79,216,.18)}
+.risebar .acts{display:flex;width:150px;height:12px;border-radius:99px;overflow:hidden;flex:none}
+.risebar .acts i{display:block;height:100%}
+.risebar .txt{flex:1;min-width:240px}
+.risebar h3{font-size:22px;margin:0 0 4px}
+.risebar p{margin:0;color:var(--muted);font-size:15px}
+.risebar .btns{display:flex;gap:8px;flex-wrap:wrap}
+.risebar .btns a{text-decoration:none;font-weight:700;font-size:14px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);color:var(--text)}
+.risebar .btns a.go{background:var(--magenta);border-color:var(--magenta);color:#120a24}
+.risebar .btns a:hover{border-color:var(--cyan)}
+.risebar .btns a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+body.show-board .risebar{display:none}
 </style>
 </head>
 <body>
@@ -129,6 +142,23 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
     </div>
   </div>
 </header>
+
+<!-- Heron Rising Challenge: runs are turned in through HGC (school sign-in) -->
+<section class="wrap risebar" id="rising" aria-label="Heron Rising Challenge">
+  <div class="in">
+    <div class="acts" aria-hidden="true"><i style="width:12%;background:#8f7bff"></i><i style="width:18%;background:#3ee6ff"></i><i style="width:18%;background:#ff4fd8"></i><i style="width:52%;background:#ffd84a"></i></div>
+    <div class="txt">
+      <h3>👑 Heron Rising Challenge</h3>
+      <p>One level, every period. Screenshot your best run with the % showing, then turn it in on HGC. Beat it to unlock the Rising Crown.</p>
+    </div>
+    <div class="btns">
+      <a class="go" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec" target="_blank" rel="noopener">Turn In My Run</a>
+      <a href="templates/heron-rising.txt" download>Get the level</a>
+      <a href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">Play</a>
+      <a href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">Leaderboard</a>
+    </div>
+  </div>
+</section>
 
 <nav><div class="wrap">
   <a href="#board" class="boardbtn" id="boardToggle">🏆 Class Board</a>
