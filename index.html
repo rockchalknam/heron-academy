@@ -133,6 +133,23 @@ body.show-board .risebar{display:none}
 .risebar .lvid code{font:700 26px "Chakra Petch",sans-serif;letter-spacing:3px;color:var(--yellow);background:#0b0618;border:1px solid var(--yellow);border-radius:10px;padding:2px 12px}
 .risebar .lvid button{font:700 14px Lexend,sans-serif;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
 .risebar .lvid button:hover{border-color:var(--cyan)}
+#rise .hero{background:linear-gradient(110deg,#2a1460,#1c1236 60%);border:1px solid var(--magenta);box-shadow:0 0 24px rgba(255,79,216,.18)}
+#rise .idrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
+#rise .idrow code{font:700 34px "Chakra Petch",sans-serif;letter-spacing:4px;color:var(--yellow);background:#0b0618;border:1px solid var(--yellow);border-radius:12px;padding:2px 14px}
+#rise .copyId{font:700 15px Lexend,sans-serif;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
+#rise .copyId:hover{border-color:var(--cyan)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;position:relative;padding-left:40px;margin:10px 0}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--magenta);color:#120a24;font:700 15px "Chakra Petch"}
+.actmap{display:flex;height:34px;border-radius:10px;overflow:hidden;border:1px solid var(--line);margin:8px 0 4px}
+.actmap div{display:grid;place-items:center;font:700 13px "Chakra Petch";color:#120a24}
+.marks{position:relative;height:44px;font-size:12px;color:var(--muted)}
+.marks span{position:absolute;transform:translateX(-50%);text-align:center;white-space:nowrap;line-height:1.25}
+.marks span::before{content:"";display:block;width:2px;height:8px;background:var(--yellow);margin:0 auto 3px}
+.marks i{font-style:normal}.marks .sh{display:none}
+@media(max-width:600px){.marks .lg{display:none}.marks .sh{display:inline}}
+.tips li{margin:6px 0}
+.tips b{color:var(--cyan)}
 </style>
 </head>
 <body>
@@ -160,8 +177,8 @@ body.show-board .risebar{display:none}
       <p>One level, every period. Open Heron Rush, search the level ID, and play. Screenshot your best run with the % showing, then turn it in on HGC. Beat it to unlock the Rising Crown.</p>
       <div class="lvid">
         <span class="lab">LEVEL ID</span>
-        <code id="risingId">145483</code>
-        <button type="button" id="copyRising">📋 Copy ID</button>
+        <code>145483</code>
+        <button type="button" class="copyId" data-id="145483">📋 Copy ID</button>
       </div>
     </div>
     <div class="btns">
@@ -174,6 +191,7 @@ body.show-board .risebar{display:none}
 
 <nav><div class="wrap">
   <a href="#board" class="boardbtn" id="boardToggle">🏆 Class Board</a>
+  <a href="#rise">👑 Heron Rising</a>
   <a href="#start">Start Here</a>
   <a href="#day1">Day 1: Rookie</a>
   <a href="#day2">Day 2: Builder</a>
@@ -184,6 +202,67 @@ body.show-board .risebar{display:none}
 </div></nav>
 
 <main class="wrap">
+
+<section id="rise">
+  <h2>👑 Heron Rising Challenge</h2>
+  <div class="panel hero">
+    <p style="margin:0">Mr. Nam built a level. Every period is trying to beat it. Climb the leaderboard, and beat it to unlock the <b style="color:var(--yellow)">Rising Crown</b> for your heron.</p>
+    <div class="idrow">
+      <span class="lbl" style="margin:0">LEVEL ID</span>
+      <code>145483</code>
+      <button type="button" class="copyId" data-id="145483">📋 Copy ID</button>
+    </div>
+    <div class="row">
+      <a class="btn" href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">▶ Play Heron Rush</a>
+      <a class="btn m" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec" target="_blank" rel="noopener">Turn In My Run</a>
+      <a class="btn y" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">🏆 Leaderboard</a>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="panel">
+      <h3 style="margin-bottom:8px">How to play</h3>
+      <ol class="steps">
+        <li>Open <b>Heron Rush</b> and search level ID <b>145483</b>.</li>
+        <li>Play in <b>normal mode</b>. Practice mode runs don't count.</li>
+        <li>When you get a new best, screenshot it with the <b>% showing</b>: <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>.</li>
+        <li>Open <b>HGC</b>, find the Heron Rising card, type your best % and attempts, add the screenshot, and hit <b>Turn In My Run</b>.</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3 style="margin-bottom:8px">How the leaderboard works</h3>
+      <ul class="rules">
+        <li><b>Highest %</b> wins.</li>
+        <li><b>Tie?</b> Fewer attempts ranks higher, so be honest and fill it in.</li>
+        <li><b>100%</b> unlocks the Rising Crown. You can't get it from chests.</li>
+        <li>Fake runs get pulled by Mr. Nam. Your screenshot is your proof.</li>
+        <li>Your period is racing every other period. Carry your class.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px">
+    <h3 style="margin-bottom:4px">The mountain (Kishōtenketsu)</h3>
+    <p class="meta" style="margin:0">Every level tells a story in four acts. Where does your run end?</p>
+    <div class="actmap" aria-hidden="true">
+      <div style="width:10%;background:#8f7bff">Ki</div>
+      <div style="width:17%;background:#3ee6ff">Sho</div>
+      <div style="width:20%;background:#ff4fd8">Ten</div>
+      <div style="width:53%;background:#ffd84a">Ketsu</div>
+    </div>
+    <div class="marks">
+      <span style="left:47%">47%<br><i class="lg">Survived the tunnel</i><i class="sh">Tunnel</i></span>
+      <span style="left:69%">69%<br><i class="lg">Reverse cleared</i><i class="sh">Reverse</i></span>
+      <span style="left:86%">86%<br><i class="lg">Through the squeeze</i><i class="sh">Squeeze</i></span>
+    </div>
+    <ul class="tips">
+      <li><b>Ki and Sho:</b> learn the rhythm. The spikes line up with the music.</li>
+      <li><b>Sho route choice:</b> high road or low road. Try both and pick your favorite.</li>
+      <li><b>Ten, the Transformation Tunnel:</b> spider, ship, robot, cube. Tap the spider on the beat, and use small taps for the ship.</li>
+      <li><b>Ketsu:</b> the tunnel comes back backwards. Then the ship squeeze steps up halfway, so be ready.</li>
+    </ul>
+  </div>
+</section>
 
 <section id="start">
   <div class="grid g2">
@@ -741,12 +820,12 @@ function formLink(exName){
   return FORM_URL;
 }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
-document.getElementById("copyRising")?.addEventListener("click",()=>{
-  const id=document.getElementById("risingId").textContent.trim();
+document.querySelectorAll(".copyId").forEach(b=>b.addEventListener("click",()=>{
+  const id=b.dataset.id;
   const done=()=>toast("Level ID "+id+" copied. Paste it into the level search!");
   if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(id).then(done,()=>toast("Level ID: "+id)); }
   else { toast("Level ID: "+id); }
-});
+}));
 
 function songsHTML(){
   if(!SONGS.length) return `<div class="submit">Approved songs: <b>ask Mr. Nam</b> or check Google Classroom.</div>`;
