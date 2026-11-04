@@ -112,27 +112,7 @@ kbd{background:var(--panel2);border:1px solid var(--line);border-bottom-width:3p
 footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(120px);background:var(--yellow);color:#120a24;font-weight:700;padding:10px 16px;border-radius:10px;transition:transform .3s;z-index:20}
 .toast.show{transform:translateX(-50%) translateY(0)}
-.risebar{margin:0 auto 16px}
-.risebar .in{display:flex;gap:18px;align-items:center;flex-wrap:wrap;background:linear-gradient(100deg,#2a1460,#1c1236 55%);border:1px solid var(--magenta);border-radius:var(--radius);padding:16px 18px;box-shadow:0 0 24px rgba(255,79,216,.18)}
-.risebar .acts{display:flex;width:150px;height:12px;border-radius:99px;overflow:hidden;flex:none}
-.risebar .acts i{display:block;height:100%}
-.risebar .txt{flex:1;min-width:240px}
-.risebar h3{font-size:22px;margin:0 0 4px}
-.risebar p{margin:0;color:var(--muted);font-size:15px}
-.risebar .btns{display:flex;gap:8px;flex-wrap:wrap}
-.risebar .btns a{text-decoration:none;font-weight:700;font-size:14px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);color:var(--text)}
-.risebar .btns a.go{background:var(--magenta);border-color:var(--magenta);color:#120a24}
-.risebar .btns a:hover{border-color:var(--cyan)}
-.risebar .btns a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
-body.show-board .risebar{display:none}
-.risebar .today{display:inline-block;font:700 12px "Chakra Petch",sans-serif;letter-spacing:1.5px;background:var(--red);color:#120a24;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.55}}
-@media (prefers-reduced-motion:reduce){.risebar .today{animation:none}}
-.risebar .lvid{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
-.risebar .lvid .lab{font:700 13px "Chakra Petch",sans-serif;letter-spacing:1.5px;color:var(--cyan)}
-.risebar .lvid code{font:700 26px "Chakra Petch",sans-serif;letter-spacing:3px;color:var(--yellow);background:#0b0618;border:1px solid var(--yellow);border-radius:10px;padding:2px 12px}
-.risebar .lvid button{font:700 14px Lexend,sans-serif;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
-.risebar .lvid button:hover{border-color:var(--cyan)}
 #rise .hero{background:linear-gradient(110deg,#2a1460,#1c1236 60%);border:1px solid var(--magenta);box-shadow:0 0 24px rgba(255,79,216,.18)}
 #rise .idrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 4px}
 #rise .idrow code{font:700 34px "Chakra Petch",sans-serif;letter-spacing:4px;color:var(--yellow);background:#0b0618;border:1px solid var(--yellow);border-radius:12px;padding:2px 14px}
@@ -177,27 +157,6 @@ body.show-board .risebar{display:none}
   </div>
 </header>
 
-<!-- Heron Rising Challenge: runs are turned in through HGC (school sign-in) -->
-<section class="wrap risebar" id="rising" aria-label="Heron Rising Challenge">
-  <div class="in">
-    <div class="acts" aria-hidden="true"><i style="width:12%;background:#8f7bff"></i><i style="width:18%;background:#3ee6ff"></i><i style="width:18%;background:#ff4fd8"></i><i style="width:52%;background:#ffd84a"></i></div>
-    <div class="txt">
-      <h3>👑 Heron Rising Challenge <span class="today">LIVE TODAY</span></h3>
-      <p>One level, every period. Open Heron Rush, search the level ID, and play. Screenshot your best run with the % showing, then turn it in on HGC. Beat it to unlock the Rising Crown.</p>
-      <div class="lvid">
-        <span class="lab">LEVEL ID</span>
-        <code>145494</code>
-        <button type="button" class="copyId" data-id="145494">📋 Copy ID</button>
-      </div>
-    </div>
-    <div class="btns">
-      <a class="go" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec" target="_blank" rel="noopener">Turn In My Run</a>
-      <a href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">▶ Play Heron Rush</a>
-      <a href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">Leaderboard</a>
-    </div>
-  </div>
-</section>
-
 <nav><div class="wrap">
   <a href="#board" class="boardbtn" id="boardToggle">🏆 Class Board</a>
   <a href="#rise">👑 Heron Rising</a>
@@ -229,17 +188,14 @@ body.show-board .risebar{display:none}
   </div>
 
 
+  <!-- Live board opens in HGC. Google won't let a school-login page load inside another site. -->
   <div class="panel live" id="liveBoard">
     <div class="top">
       <h3><span class="dot" aria-hidden="true"></span>Live: who's in the lead?</h3>
-      <label style="font-size:14px;color:var(--muted)">Show
-        <select id="liveP" aria-label="Choose which period to show">
-          <option value="">All periods</option><option value="1">Period 1</option><option value="2">Period 2</option><option value="3">Period 3</option><option value="4">Period 4</option>
-        </select>
-      </label>
     </div>
-    <div class="frame"><iframe id="liveFrame" title="Heron Rising live leaderboard" loading="lazy"></iframe></div>
-    <p class="note">Updates every 30 seconds. Sign in with your school account to see it. Board not showing? <a href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">Open the full leaderboard</a>.</p>
+    <p style="margin:0 0 12px">The live leaderboard lives in HGC, right on your Heron Rising card. It shows the top 10 herons from every period, plus your own best and rank.</p>
+    <a class="btn y" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener" style="display:block;text-align:center">🏆 Open the Live Leaderboard</a>
+    <p class="note">Opens in a new tab. Sign in with your school account.</p>
   </div>
 
   <div class="grid g2" style="margin-top:14px">
@@ -843,13 +799,6 @@ function formLink(exName){
   return FORM_URL;
 }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
-const LIVE_URL="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising";
-(function(){
-  const f=document.getElementById("liveFrame"), sel=document.getElementById("liveP");
-  if(!f) return;
-  const go=()=>{ f.src = LIVE_URL + (sel.value ? "&period="+encodeURIComponent(sel.value) : ""); };
-  sel.addEventListener("change",go); go();
-})();
 document.querySelectorAll(".copyId").forEach(b=>b.addEventListener("click",()=>{
   const id=b.dataset.id;
   const done=()=>toast("Level ID "+id+" copied. Paste it into the level search!");
