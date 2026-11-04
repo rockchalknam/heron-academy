@@ -150,6 +150,15 @@ body.show-board .risebar{display:none}
 @media(max-width:600px){.marks .lg{display:none}.marks .sh{display:inline}}
 .tips li{margin:6px 0}
 .tips b{color:var(--cyan)}
+.live{margin-top:14px;border:1px solid var(--yellow);box-shadow:0 0 22px rgba(255,216,74,.15)}
+.live .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.live .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);margin-right:8px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.live .dot{animation:none}}
+.live select{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:14px}
+.live .frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0618}
+.live iframe{display:block;width:100%;height:640px;border:0}
+@media(max-width:600px){.live iframe{height:520px}}
+.live .note{font-size:13px;color:var(--muted);margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -217,6 +226,20 @@ body.show-board .risebar{display:none}
       <a class="btn m" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec" target="_blank" rel="noopener">Turn In My Run</a>
       <a class="btn y" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">🏆 Leaderboard</a>
     </div>
+  </div>
+
+
+  <div class="panel live" id="liveBoard">
+    <div class="top">
+      <h3><span class="dot" aria-hidden="true"></span>Live: who's in the lead?</h3>
+      <label style="font-size:14px;color:var(--muted)">Show
+        <select id="liveP" aria-label="Choose which period to show">
+          <option value="">All periods</option><option value="1">Period 1</option><option value="2">Period 2</option><option value="3">Period 3</option><option value="4">Period 4</option>
+        </select>
+      </label>
+    </div>
+    <div class="frame"><iframe id="liveFrame" title="Heron Rising live leaderboard" loading="lazy"></iframe></div>
+    <p class="note">Updates every 30 seconds. Sign in with your school account to see it. Board not showing? <a href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">Open the full leaderboard</a>.</p>
   </div>
 
   <div class="grid g2" style="margin-top:14px">
@@ -820,6 +843,13 @@ function formLink(exName){
   return FORM_URL;
 }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
+const LIVE_URL="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising";
+(function(){
+  const f=document.getElementById("liveFrame"), sel=document.getElementById("liveP");
+  if(!f) return;
+  const go=()=>{ f.src = LIVE_URL + (sel.value ? "&period="+encodeURIComponent(sel.value) : ""); };
+  sel.addEventListener("change",go); go();
+})();
 document.querySelectorAll(".copyId").forEach(b=>b.addEventListener("click",()=>{
   const id=b.dataset.id;
   const done=()=>toast("Level ID "+id+" copied. Paste it into the level search!");
