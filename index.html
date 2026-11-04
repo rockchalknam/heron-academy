@@ -125,6 +125,14 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 .risebar .btns a:hover{border-color:var(--cyan)}
 .risebar .btns a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 body.show-board .risebar{display:none}
+.risebar .today{display:inline-block;font:700 12px "Chakra Petch",sans-serif;letter-spacing:1.5px;background:var(--red);color:#120a24;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){.risebar .today{animation:none}}
+.risebar .lvid{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.risebar .lvid .lab{font:700 13px "Chakra Petch",sans-serif;letter-spacing:1.5px;color:var(--cyan)}
+.risebar .lvid code{font:700 26px "Chakra Petch",sans-serif;letter-spacing:3px;color:var(--yellow);background:#0b0618;border:1px solid var(--yellow);border-radius:10px;padding:2px 12px}
+.risebar .lvid button{font:700 14px Lexend,sans-serif;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer}
+.risebar .lvid button:hover{border-color:var(--cyan)}
 </style>
 </head>
 <body>
@@ -148,13 +156,17 @@ body.show-board .risebar{display:none}
   <div class="in">
     <div class="acts" aria-hidden="true"><i style="width:12%;background:#8f7bff"></i><i style="width:18%;background:#3ee6ff"></i><i style="width:18%;background:#ff4fd8"></i><i style="width:52%;background:#ffd84a"></i></div>
     <div class="txt">
-      <h3>👑 Heron Rising Challenge</h3>
-      <p>One level, every period. Screenshot your best run with the % showing, then turn it in on HGC. Beat it to unlock the Rising Crown.</p>
+      <h3>👑 Heron Rising Challenge <span class="today">LIVE TODAY</span></h3>
+      <p>One level, every period. Open Heron Rush, search the level ID, and play. Screenshot your best run with the % showing, then turn it in on HGC. Beat it to unlock the Rising Crown.</p>
+      <div class="lvid">
+        <span class="lab">LEVEL ID</span>
+        <code id="risingId">145483</code>
+        <button type="button" id="copyRising">📋 Copy ID</button>
+      </div>
     </div>
     <div class="btns">
       <a class="go" href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec" target="_blank" rel="noopener">Turn In My Run</a>
-      <a href="templates/heron-rising.txt" download>Get the level</a>
-      <a href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">Play</a>
+      <a href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">▶ Play Heron Rush</a>
       <a href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising" target="_blank" rel="noopener">Leaderboard</a>
     </div>
   </div>
@@ -729,6 +741,12 @@ function formLink(exName){
   return FORM_URL;
 }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
+document.getElementById("copyRising")?.addEventListener("click",()=>{
+  const id=document.getElementById("risingId").textContent.trim();
+  const done=()=>toast("Level ID "+id+" copied. Paste it into the level search!");
+  if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(id).then(done,()=>toast("Level ID: "+id)); }
+  else { toast("Level ID: "+id); }
+});
 
 function songsHTML(){
   if(!SONGS.length) return `<div class="submit">Approved songs: <b>ask Mr. Nam</b> or check Google Classroom.</div>`;
