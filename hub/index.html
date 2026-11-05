@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heron Game Center</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: dark; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:#141414; color:#fff;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; text-align:center; }
+  a { color:#ffc93c; font-weight:700; }
+  p { color:#a3a3a3; }
+</style>
+<script>
+  /* Short link to the Heron Game Center. Extras like ?period=2 come along. */
+  (function () {
+    var base = "https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec";
+    var extra = "view=teacher";
+    var q = location.search ? location.search.slice(1) : "";
+    var parts = [extra, q].filter(Boolean).join("&");
+    location.replace(base + (parts ? "?" + parts : ""));
+  })();
+</script>
+</head>
+<body>
+  <div>
+    <h1>🪶 Heron Game Center</h1>
+    <p>Taking you to the Teacher Dashboard...</p>
+    <p><a href="https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=teacher">Tap here if nothing happens</a></p>
+  </div>
+</body>
+</html>
