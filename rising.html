@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Heron Rising Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Lexend:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#120a24; --panel:#1c1236; --panel2:#251847; --line:#3a2a66;
+  --text:#f2eefc; --muted:#b7aed3; --cyan:#3ee6ff; --magenta:#ff4fd8; --yellow:#ffd84a;
+  --green:#5dff9b; --red:#ff5a6e; --gold:#ffd84a; --silver:#d7dcef; --bronze:#f0a868;
+  --p1:#8f7bff; --p2:#3ee6ff; --p3:#ff4fd8; --p4:#ffd84a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.45 Lexend,system-ui,sans-serif;
+  background-image:radial-gradient(circle at 15% 0%,#2a1460 0,transparent 45%),radial-gradient(circle at 100% 30%,#1a0f45 0,transparent 40%);min-height:100vh}
+h1,h2,h3{font-family:"Chakra Petch",Lexend,sans-serif;margin:0;line-height:1.1}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 20px 34px}
+header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+h1{font-size:clamp(28px,4.4vw,48px);letter-spacing:.5px}
+h1 span{color:var(--yellow);text-shadow:0 0 20px rgba(255,216,74,.45)}
+.sub{color:var(--muted);font-size:15px;margin-top:6px}
+.chip{font:700 15px "Chakra Petch";letter-spacing:2px;color:var(--yellow);border:1px solid var(--yellow);background:#0b0618;border-radius:10px;padding:4px 12px}
+.live{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+.dot.off{background:var(--red);box-shadow:0 0 10px var(--red);animation:none}
+@keyframes pulse{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.dot{animation:none}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tabs button{font:700 15px "Chakra Petch";letter-spacing:1px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:#120a24}
+.tabs button:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.grid{display:grid;gap:16px}
+@media(min-width:900px){.grid{grid-template-columns:1fr 300px}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.board{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:52px 34px 1fr auto;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.row.r1{border-color:var(--gold);box-shadow:0 0 18px rgba(255,216,74,.22)}
+.row.r2{border-color:var(--silver)}
+.row.r3{border-color:var(--bronze)}
+.rank{font:700 26px "Chakra Petch";text-align:center;color:var(--muted)}
+.r1 .rank{color:var(--gold)} .r2 .rank{color:var(--silver)} .r3 .rank{color:var(--bronze)}
+.cube{width:30px;height:30px;border-radius:6px;border:3px solid #0b0618;display:grid;place-items:center;box-shadow:inset 0 0 0 3px rgba(255,255,255,.25)}
+.cube i{width:10px;height:10px;background:#0b0618;border-radius:2px;display:block}
+.who{min-width:0}
+.name{font-weight:700;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{color:var(--muted);font-size:13px}
+.bar{height:6px;background:#0b0618;border-radius:99px;margin-top:6px;overflow:hidden}
+.bar b{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--magenta));border-radius:99px}
+.done .bar b{background:linear-gradient(90deg,var(--yellow),#fff3b0)}
+.pct{font:700 28px "Chakra Petch";min-width:84px;text-align:right}
+.done .pct{color:var(--yellow)}
+.crown{font-size:18px;margin-right:4px}
+@media(max-width:560px){.row{grid-template-columns:28px 24px 1fr auto;gap:8px;padding:10px}.rank{font-size:20px}.cube{width:22px;height:22px;border-width:2px}.cube i{width:7px;height:7px}.pct{font-size:22px;min-width:58px}.name{font-size:16px}.panel{padding:10px}}
+.empty{color:var(--muted);text-align:center;padding:30px 10px}
+h2{font-size:20px;margin-bottom:10px}
+.race{display:flex;flex-direction:column;gap:12px}
+.race .lab{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);margin-bottom:4px}
+.race .lab b{color:var(--text);font-family:"Chakra Petch";font-size:16px}
+.race .track{height:16px;background:#0b0618;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.race .track i{display:block;height:100%;border-radius:99px;transition:width 1s}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+.err{background:#3a1222;border:1px solid var(--red);border-radius:12px;padding:12px 14px;margin-bottom:14px;color:#ffd6dc;font-size:15px}
+body.embed .wrap{padding:10px}
+body.embed header{margin-bottom:10px}
+body.embed h1{font-size:26px}
+body.embed .sub{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>👑 Heron <span>Rising</span></h1>
+      <div class="sub">Best run counts. Highest % wins. Tie? Whoever got there first.</div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <span class="chip" id="levelChip">LEVEL 145592</span>
+      <span class="live"><span class="dot" id="dot"></span><span id="status">Loading…</span></span>
+    </div>
+  </header>
+
+  <div id="err" class="err" hidden></div>
+
+  <div class="tabs" role="group" aria-label="Choose which players to show">
+    <button type="button" data-p="" aria-pressed="true">TOP</button>
+    <button type="button" data-p="1" aria-pressed="false">PERIOD 1</button>
+    <button type="button" data-p="2" aria-pressed="false">PERIOD 2</button>
+    <button type="button" data-p="3" aria-pressed="false">PERIOD 3</button>
+    <button type="button" data-p="4" aria-pressed="false">PERIOD 4</button>
+  </div>
+
+  <div class="grid">
+    <div class="panel"><div class="board" id="board"><div class="empty">Loading the flock…</div></div></div>
+    <div class="panel">
+      <h2>Period race</h2>
+      <div class="race" id="race"></div>
+      <p class="note">Each period's average best %. Every run you turn in pushes your class up.</p>
+      <p class="note" id="beaten"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* SETUP: paste the "Publish to web" CSV link of the RisingBoard tab
+   (Heron Game Center sheet → File → Share → Publish to web → RisingBoard → CSV). */
+const RISING_CSV = "";
+const LEVEL_ID = "145592";
+const REFRESH_MS = 60000;
+const SHOW_TOP = 50;
+const PERIODS = ["1","2","3","4"];
+const PCOL = {"1":"var(--p1)","2":"var(--p2)","3":"var(--p3)","4":"var(--p4)"};
+
+const qs = new URLSearchParams(location.search);
+if (qs.get("embed")==="1") document.body.classList.add("embed");
+let period = qs.get("period") || "";
+let ROWS = [];
+
+document.getElementById("levelChip").textContent = "LEVEL " + LEVEL_ID;
+
+function parseCSV(text){
+  const out=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(f); out.push(row); row=[]; f=""; }
+    else f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); out.push(row); }
+  return out;
+}
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function load(rows){
+  // columns: Rank, Name, Period, Best %, Attempts, Reached
+  return rows.slice(1).filter(r=>r[1]).map(r=>({
+    name:r[1].trim(), period:String(r[2]).trim(), pct:Math.max(0,Math.min(100,parseFloat(r[3])||0)),
+    att:r[4]?parseInt(r[4],10):null
+  }));
+}
+function demo(){
+  return [["Rank","Name","Period","Best %","Attempts","Reached"],
+    ["1","Simon B.","4","100","14",""],["2","Riley H.","4","100","22",""],["3","Jett C.","2","86","31",""],
+    ["4","Kolton L.","1","74","19",""],["5","Landon P.","3","69","25",""],["6","Cora H.","1","51","12",""],
+    ["7","Tavin S.","3","47","9",""],["8","Gavin S.","2","18","5",""]];
+}
+
+function render(){
+  const list = (period ? ROWS.filter(r=>r.period===period) : ROWS).slice(0,SHOW_TOP);
+  const b = document.getElementById("board");
+  if(!list.length){ b.innerHTML = '<div class="empty">No runs yet. Be the first heron on the board!</div>'; }
+  else b.innerHTML = list.map((r,i)=>{
+    const n=i+1, done=r.pct>=100;
+    return `<div class="row ${n<=3?"r"+n:""} ${done?"done":""}">
+      <div class="rank">${n}</div>
+      <div class="cube" style="background:${PCOL[r.period]||"var(--cyan)"}" aria-hidden="true"><i></i></div>
+      <div class="who"><div class="name">${done?'<span class="crown" aria-label="Beat the level">👑</span>':""}${esc(r.name)}</div>
+        <div class="meta">Period ${esc(r.period)}${r.att?" · "+r.att+" attempts":""}</div>
+        <div class="bar"><b style="width:${r.pct}%"></b></div></div>
+      <div class="pct">${r.pct}%</div></div>`;
+  }).join("");
+
+  const race = document.getElementById("race");
+  race.innerHTML = PERIODS.map(p=>{
+    const rs = ROWS.filter(r=>r.period===p);
+    const avg = rs.length ? Math.round(rs.reduce((a,r)=>a+r.pct,0)/rs.length) : 0;
+    return `<div><div class="lab"><span>Period ${p} · ${rs.length} heron${rs.length===1?"":"s"}</span><b>${avg}%</b></div>
+      <div class="track"><i style="width:${avg}%;background:${PCOL[p]}"></i></div></div>`;
+  }).join("");
+  const beat = ROWS.filter(r=>r.pct>=100).length;
+  document.getElementById("beaten").textContent = beat ? `👑 ${beat} heron${beat===1?" has":"s have"} beaten the level.` : "Nobody has beaten it yet.";
+}
+
+async function refresh(){
+  const dot=document.getElementById("dot"), st=document.getElementById("status"), err=document.getElementById("err");
+  try{
+    let data;
+    if(!RISING_CSV){ data=demo(); st.textContent="Demo data (not connected yet)"; dot.classList.add("off"); }
+    else{
+      const r = await fetch(RISING_CSV+(RISING_CSV.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
+      if(!r.ok) throw new Error("The leaderboard didn't load ("+r.status+"). Check that the RisingBoard tab is published to the web as CSV.");
+      data = parseCSV(await r.text());
+      dot.classList.remove("off");
+      st.textContent = "Live · updated "+new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+    }
+    ROWS = load(data); err.hidden=true; render();
+  }catch(e){
+    dot.classList.add("off"); st.textContent="Offline"; err.textContent=e.message; err.hidden=false;
+  }
+}
+
+document.querySelectorAll(".tabs button").forEach(btn=>{
+  if(btn.dataset.p===period){ document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-pressed","false")); btn.setAttribute("aria-pressed","true"); }
+  btn.addEventListener("click",()=>{
+    period=btn.dataset.p;
+    document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-pressed",String(x===btn)));
+    render();
+  });
+});
+refresh(); setInterval(refresh, REFRESH_MS);
+</script>
+</body>
+</html>
