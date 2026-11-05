@@ -125,9 +125,9 @@ footer{color:var(--muted);font-size:13px;padding:30px 0 40px;text-align:center}
 .risebar .btns a:hover{border-color:var(--cyan)}
 .risebar .btns a:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
 body.show-board .risebar{display:none}
-.risebar .today{display:inline-block;font:700 12px "Chakra Petch",sans-serif;letter-spacing:1.5px;background:var(--red);color:#120a24;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite}
+#rise .today{display:inline-block;font:700 12px "Chakra Petch",sans-serif;letter-spacing:1.5px;background:var(--red);color:#120a24;padding:3px 8px;border-radius:6px;margin-left:8px;vertical-align:middle;animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.55}}
-@media (prefers-reduced-motion:reduce){.risebar .today{animation:none}}
+@media (prefers-reduced-motion:reduce){#rise .today{animation:none}}
 .risebar .lvid{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .risebar .lvid .lab{font:700 13px "Chakra Petch",sans-serif;letter-spacing:1.5px;color:var(--cyan)}
 .risebar .lvid code{font:700 26px "Chakra Petch",sans-serif;letter-spacing:3px;color:var(--yellow);background:#0b0618;border:1px solid var(--yellow);border-radius:10px;padding:2px 12px}
@@ -156,7 +156,7 @@ body.show-board .risebar{display:none}
 @media (prefers-reduced-motion:reduce){.live .dot{animation:none}}
 .live select{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:14px}
 .live .frame{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b0618}
-.live iframe{display:block;width:100%;height:640px;border:0}
+.live iframe{display:block;width:100%;height:720px;border:0}
 @media(max-width:600px){.live iframe{height:520px}}
 .live .note{font-size:13px;color:var(--muted);margin:8px 0 0}
 </style>
@@ -177,26 +177,6 @@ body.show-board .risebar{display:none}
   </div>
 </header>
 
-<!-- Heron Rising Challenge: runs are turned in through HGC (RISING_FORM / RISING_BOARD in the script) -->
-<section class="wrap risebar" id="rising" aria-label="Heron Rising Challenge">
-  <div class="in">
-    <div class="acts" aria-hidden="true"><i style="width:12%;background:#8f7bff"></i><i style="width:18%;background:#3ee6ff"></i><i style="width:18%;background:#ff4fd8"></i><i style="width:52%;background:#ffd84a"></i></div>
-    <div class="txt">
-      <h3>👑 Heron Rising Challenge <span class="today">LIVE TODAY</span></h3>
-      <p>One level, every period. Open Heron Rush, search the level ID, and play. Screenshot your best run with the % showing, then click Turn In My Run. Beat it to unlock the Rising Crown.</p>
-      <div class="lvid">
-        <span class="lab">LEVEL ID</span>
-        <code>145494</code>
-        <button type="button" class="copyId" data-id="145494">📋 Copy ID</button>
-      </div>
-    </div>
-    <div class="btns">
-      <a class="go risingTurnIn" href="#" target="_blank" rel="noopener">Turn In My Run</a>
-      <a href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">▶ Play Heron Rush</a>
-      <a class="risingBoard" href="#" target="_blank" rel="noopener">Leaderboard</a>
-    </div>
-  </div>
-</section>
 
 <nav><div class="wrap">
   <a href="#board" class="boardbtn" id="boardToggle">🏆 Class Board</a>
@@ -213,13 +193,13 @@ body.show-board .risebar{display:none}
 <main class="wrap">
 
 <section id="rise">
-  <h2>👑 Heron Rising Challenge</h2>
+  <h2>👑 Heron Rising Challenge <span class="today">LIVE TODAY</span></h2>
   <div class="panel hero">
     <p style="margin:0">Mr. Nam built a level. Every period is trying to beat it. Climb the leaderboard, and beat it to unlock the <b style="color:var(--yellow)">Rising Crown</b> for your heron.</p>
     <div class="idrow">
       <span class="lbl" style="margin:0">LEVEL ID</span>
-      <code>145494</code>
-      <button type="button" class="copyId" data-id="145494">📋 Copy ID</button>
+      <code>145592</code>
+      <button type="button" class="copyId" data-id="145592">📋 Copy ID</button>
     </div>
     <div class="row">
       <a class="btn" href="https://rockchalknam.github.io/heronrush/" target="_blank" rel="noopener">▶ Play Heron Rush</a>
@@ -239,14 +219,14 @@ body.show-board .risebar{display:none}
       </label>
     </div>
     <div class="frame"><iframe id="liveFrame" title="Heron Rising live leaderboard" loading="lazy"></iframe></div>
-    <p class="note">Updates every 30 seconds. Sign in with your school account to see it. Board not showing? <a class="risingBoard" href="#" target="_blank" rel="noopener">Open the full leaderboard</a>.</p>
+    <p class="note">Updates every minute. Board not showing? <a class="risingBoard" href="#" target="_blank" rel="noopener">Open the full leaderboard</a>.</p>
   </div>
 
   <div class="grid g2" style="margin-top:14px">
     <div class="panel">
       <h3 style="margin-bottom:8px">How to play</h3>
       <ol class="steps">
-        <li>Open <b>Heron Rush</b> and search level ID <b>145494</b>.</li>
+        <li>Open <b>Heron Rush</b> and search level ID <b>145592</b>.</li>
         <li>Play in <b>normal mode</b>. Practice mode runs don't count.</li>
         <li>When you get a new best, screenshot it with the <b>% showing</b>: <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>.</li>
         <li>Click <b>Turn In My Run</b> to open <b>HGC</b>. On the Heron Rising card, type your best % and attempts, tap <b>Add your screenshot</b>, then <b>Turn In My Run</b>.</li>
@@ -256,7 +236,8 @@ body.show-board .risebar{display:none}
       <h3 style="margin-bottom:8px">How the leaderboard works</h3>
       <ul class="rules">
         <li><b>Highest %</b> wins.</li>
-        <li><b>Tie?</b> Fewer attempts ranks higher, so be honest and fill it in.</li>
+        <li><b>Tie?</b> Whoever got there first ranks higher, just like Geometry Dash.</li>
+        <li><b>Turn in as many runs as you want.</b> Only your best one counts.</li>
         <li><b>100%</b> unlocks the Rising Crown. You can't get it from chests.</li>
         <li>Fake runs get pulled by Mr. Nam. Your screenshot is your proof.</li>
         <li>Your period is racing every other period. Carry your class.</li>
@@ -844,10 +825,10 @@ function formLink(exName){
 }
 function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2200); }
 // Heron Rising leaderboard page. Empty = live panel hidden, Leaderboard buttons say "coming soon".
-const RISING_BOARD = "https://script.google.com/a/macros/ridgefieldsd.org/s/AKfycbxaokDekSXikdo-kWu4oHau6sLZDHT_TIJlnjYRIBbUMzw4i9JYTNnCbTCYPbU9s85Z/exec?view=rising";
+const RISING_BOARD = "rising.html";
 // Set to true only after HGC allows embedding (setXFrameOptionsMode ALLOWALL in doGet).
-const RISING_EMBED = false;
-const LIVE_URL = RISING_EMBED ? RISING_BOARD : "";
+const RISING_EMBED = true;
+const LIVE_URL = RISING_EMBED ? "rising.html?embed=1" : "";
 document.querySelectorAll(".risingBoard").forEach(a=>{
   if(RISING_BOARD){ a.href = RISING_BOARD; }
   else a.addEventListener("click",ev=>{ ev.preventDefault(); toast("Leaderboard goes live soon!"); });
